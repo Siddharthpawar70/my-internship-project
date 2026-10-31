@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # StayAura Hotel Booking
 
 ## Run locally
@@ -29,3 +30,6 @@ Run `npm run lint` for the TypeScript check and `npm run build` for a production
 Online card, UPI, and net-banking payments are not configured. Those methods create reservations with a `Pending` payment status; card data is not collected. Add a payment provider and implement its server-side order creation, signed webhook verification, refunds, and idempotency before accepting online payments. Email delivery, password recovery, social/SSO login, and SMS verification also require provider credentials and are not enabled.
 
 The hotel catalog and initial room inventory are seeded demo content. Wishlist, reviews, notifications, and much of the hotel-admin configuration still use browser state or mock data and are not yet multi-user database-backed. Use a managed MySQL service and deployment-specific session/security configuration for production.
+=======
+# my-internship-project
+>>>>>>> db7b07ad622ef0b50a100fc7363c899cdf756622
