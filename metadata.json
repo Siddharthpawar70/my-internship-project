@@ -1,0 +1,6 @@
+{
+  "name": "StayAura",
+  "description": "Find your perfect stay. Discover luxury hotels, boutique resorts, and unforgettable stays across India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
