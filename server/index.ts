@@ -17,7 +17,13 @@ import {
   INITIAL_MAINTENANCE,
   INITIAL_BOOKINGS
 } from '../src/data/mockData';
-import { Booking, GuestDetails, Hotel, RoomType, Review, HousekeepingRoom, MaintenanceTicket, Coupon } from '../src/types';
+import { Booking, GuestDetails, Hotel, RoomType, Review, HousekeepingRoom, MaintenanceTicket, Coupon, PaymentRecord } from '../src/types';
+import {
+  createYoupiPaymentSession,
+  queryYoupiPayment,
+  processYoupiWebhookEvent,
+  getYoupiConfig
+} from './youpiGateway';
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -298,6 +304,33 @@ async function initializeDatabase() {
           KEY booking_inventory_lookup (room_id, status, check_in, check_out),
           KEY bookings_by_user (user_id, created_at),
           CONSTRAINT bookings_user_fk FOREIGN KEY (user_id) REFERENCES users(id)
+        ) ENGINE=InnoDB`,
+        `CREATE TABLE IF NOT EXISTS payments (
+          id VARCHAR(100) PRIMARY KEY,
+          booking_id VARCHAR(32) NOT NULL,
+          gateway_payment_id VARCHAR(100),
+          gateway_order_id VARCHAR(100) NOT NULL,
+          payment_method VARCHAR(50) NOT NULL,
+          amount DECIMAL(10,2) NOT NULL,
+          currency VARCHAR(10) NOT NULL DEFAULT 'INR',
+          payment_status VARCHAR(50) NOT NULL,
+          settlement_status VARCHAR(50) NOT NULL DEFAULT 'UNSETTLED',
+          utr VARCHAR(100),
+          webhook_delivery_id VARCHAR(100),
+          created_at VARCHAR(50) NOT NULL,
+          completed_at VARCHAR(50),
+          metadata LONGTEXT,
+          raw_payload LONGTEXT,
+          KEY payments_by_booking (booking_id),
+          KEY payments_by_gateway_id (gateway_payment_id),
+          KEY payments_by_order_id (gateway_order_id),
+          CONSTRAINT payments_booking_fk FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB`,
+        `CREATE TABLE IF NOT EXISTS processed_webhooks (
+          delivery_id VARCHAR(100) PRIMARY KEY,
+          event_type VARCHAR(50) NOT NULL,
+          payment_id VARCHAR(100),
+          processed_at VARCHAR(50) NOT NULL
         ) ENGINE=InnoDB`
       ];
       for (const statement of schemaStatements) await pool.query(statement);
@@ -375,6 +408,30 @@ async function initializeDatabase() {
         data TEXT NOT NULL,
         created_at TEXT NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
+      )`,
+      `CREATE TABLE IF NOT EXISTS payments (
+        id TEXT PRIMARY KEY,
+        booking_id TEXT NOT NULL,
+        gateway_payment_id TEXT,
+        gateway_order_id TEXT NOT NULL,
+        payment_method TEXT NOT NULL,
+        amount REAL NOT NULL,
+        currency TEXT NOT NULL DEFAULT 'INR',
+        payment_status TEXT NOT NULL,
+        settlement_status TEXT NOT NULL DEFAULT 'UNSETTLED',
+        utr TEXT,
+        webhook_delivery_id TEXT,
+        created_at TEXT NOT NULL,
+        completed_at TEXT,
+        metadata TEXT,
+        raw_payload TEXT,
+        FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
+      )`,
+      `CREATE TABLE IF NOT EXISTS processed_webhooks (
+        delivery_id TEXT PRIMARY KEY,
+        event_type TEXT NOT NULL,
+        payment_id TEXT,
+        processed_at TEXT NOT NULL
       )`
     ];
     for (const statement of sqliteSchema) sqliteDb.exec(statement);
@@ -577,7 +634,8 @@ async function createBooking(request: BookingRequest, user: StoredUser): Promise
     discountAmount: discount,
     grandTotal: subtotal - discount + taxesAndFees + serviceFee,
     paymentMethod,
-    paymentStatus: paymentMethod === 'Pay at Hotel' ? 'Pending' : 'Paid',
+    paymentStatus: 'Pending',
+    settlementStatus: paymentMethod === 'Pay at Hotel' ? 'NOT_APPLICABLE' : 'UNSETTLED',
     bookingStatus: 'Confirmed',
     bookedAt: new Date().toISOString().replace('T', ' ').substring(0, 19)
   };
@@ -616,8 +674,49 @@ const upload = multer({
   }
 });
 
+// ==========================================
+// YOUPI PG V2 AUTHORITATIVE WEBHOOK ENDPOINT
+// Uses raw request body to verify HMAC-SHA256 signature
+// ==========================================
+app.post(
+  '/api/payments/webhook',
+  express.raw({ type: '*/*' }),
+  asyncRoute(async (request: Request, response: Response) => {
+    if (databaseUnavailable) {
+      return response.status(503).json({ error: 'Database is unavailable. Cannot process webhook.' });
+    }
+
+    const rawBody = Buffer.isBuffer(request.body)
+      ? request.body.toString('utf8')
+      : typeof request.body === 'string'
+      ? request.body
+      : JSON.stringify(request.body || {});
+
+    const result = await processYoupiWebhookEvent(
+      rawBody,
+      request.headers as Record<string, string | string[] | undefined>,
+      query,
+      execute
+    );
+
+    return response.status(result.statusCode).json({
+      received: result.success,
+      message: result.message,
+      duplicate: result.duplicate,
+      bookingId: result.bookingId,
+      paymentStatus: result.paymentStatus,
+      settlementStatus: result.settlementStatus
+    });
+  })
+);
+
 app.use(express.json({ limit: '15mb' }));
+const publicDirectory = path.resolve(process.cwd(), 'Public');
+app.use('/upload', express.static(path.resolve(process.cwd(), 'upload')));
+app.use('/upload', express.static(path.resolve(publicDirectory, 'upload')));
 app.use('/uploads', express.static(uploadsDir));
+app.use('/Images', express.static(path.resolve(publicDirectory, 'Images')));
+app.use('/images', express.static(path.resolve(publicDirectory, 'Images')));
 app.use('/api', (_request, response, next) => {
   if (databaseUnavailable) {
     return response.status(503).json({ error: 'Database is unavailable. Start MySQL or check file permissions for SQLite.' });
@@ -891,6 +990,261 @@ app.get('/api/bookings/:id', asyncRoute(async (request, response) => {
   if (!user) return;
   const booking = (await query<{ data: string }>('SELECT data FROM bookings WHERE id = ? AND user_id = ?', [request.params.id, user.id]))[0];
   return booking ? response.json({ booking: JSON.parse(booking.data) }) : response.status(404).json({ error: 'Booking not found.' });
+}));
+
+// ==========================================
+// YOUPI PG V2 INTEGRATED PAYMENT APIS
+// ==========================================
+
+// 1. Create Payment Session with YOUPI PG V2
+app.post('/api/payments/create-session', asyncRoute(async (request: Request, response: Response) => {
+  const user = await requireUser(request, response);
+  if (!user) return;
+
+  const { bookingId, bookingRequest, returnUrl } = request.body || {};
+  let booking: Booking;
+
+  if (bookingRequest) {
+    // Server-side calculation and creation
+    booking = await createBooking(bookingRequest as BookingRequest, user);
+  } else if (bookingId) {
+    const row = (await query<{ data: string }>('SELECT data FROM bookings WHERE id = ? AND user_id = ?', [bookingId, user.id]))[0];
+    if (!row) {
+      return response.status(404).json({ error: 'Reservation not found.' });
+    }
+    booking = JSON.parse(row.data) as Booking;
+  } else {
+    return response.status(400).json({ error: 'Provide bookingRequest or bookingId.' });
+  }
+
+  // Never initiate UPI payment if already paid and verified
+  if (booking.paymentStatus === 'Paid' && booking.settlementStatus === 'RECONCILED') {
+    return response.status(400).json({ error: 'This reservation is already paid and verified.' });
+  }
+
+  const attemptNumber = (booking.paymentAttemptsCount || 0) + 1;
+
+  try {
+    const sessionResult = await createYoupiPaymentSession({
+      bookingId: booking.id,
+      amount: booking.grandTotal, // Strictly verified server-side amount
+      guestName: `${booking.guestDetails.firstName} ${booking.guestDetails.lastName}`.trim(),
+      guestPhone: booking.guestDetails.phone,
+      guestEmail: booking.guestDetails.email,
+      hotelName: booking.hotelName,
+      roomName: booking.roomName,
+      returnUrl,
+      attemptNumber
+    });
+
+    booking.gatewayPaymentId = sessionResult.paymentId;
+    booking.gatewayOrderId = sessionResult.orderId;
+    booking.checkoutUrl = sessionResult.checkoutUrl;
+    booking.paymentCreatedAt = new Date().toISOString();
+    booking.paymentAttemptsCount = attemptNumber;
+    booking.paymentMethod = 'UPI';
+    booking.paymentStatus = 'Pending';
+    booking.settlementStatus = 'UNSETTLED';
+
+    // Persist booking
+    await execute('UPDATE bookings SET data = ? WHERE id = ? AND user_id = ?', [
+      JSON.stringify(booking), booking.id, user.id
+    ]);
+
+    // Persist payment attempt in payments table
+    const paymentRecordId = `pay_${randomUUID()}`;
+    await execute(
+      `INSERT INTO payments (
+        id, booking_id, gateway_payment_id, gateway_order_id, payment_method,
+        amount, currency, payment_status, settlement_status, utr,
+        webhook_delivery_id, created_at, completed_at, metadata, raw_payload
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        paymentRecordId,
+        booking.id,
+        sessionResult.paymentId,
+        sessionResult.orderId,
+        'UPI',
+        booking.grandTotal,
+        'INR',
+        'INITIATED',
+        'UNSETTLED',
+        null,
+        null,
+        new Date().toISOString(),
+        null,
+        JSON.stringify({ attemptNumber, checkoutUrl: sessionResult.checkoutUrl }),
+        null
+      ]
+    );
+
+    return response.status(201).json({
+      booking,
+      paymentId: sessionResult.paymentId,
+      orderId: sessionResult.orderId,
+      amount: sessionResult.amount,
+      currency: sessionResult.currency,
+      checkoutUrl: sessionResult.checkoutUrl,
+      status: sessionResult.status
+    });
+  } catch (error) {
+    console.error('YOUPI PG session creation error:', error);
+    return response.status(502).json({
+      error: error instanceof Error ? error.message : 'Failed to create payment session with YOUPI PG.'
+    });
+  }
+}));
+
+// 2. Retry Payment for failed, expired or cancelled sessions
+app.post('/api/payments/retry', asyncRoute(async (request: Request, response: Response) => {
+  const user = await requireUser(request, response);
+  if (!user) return;
+
+  const { bookingId, returnUrl } = request.body || {};
+  if (!bookingId) {
+    return response.status(400).json({ error: 'Provide bookingId to retry payment.' });
+  }
+
+  const row = (await query<{ data: string }>('SELECT data FROM bookings WHERE id = ? AND user_id = ?', [bookingId, user.id]))[0];
+  if (!row) {
+    return response.status(404).json({ error: 'Reservation not found.' });
+  }
+
+  const booking = JSON.parse(row.data) as Booking;
+
+  if (booking.paymentStatus === 'Paid' && booking.settlementStatus === 'RECONCILED') {
+    return response.status(400).json({ error: 'This reservation is already paid and reconciled.' });
+  }
+
+  const attemptNumber = (booking.paymentAttemptsCount || 1) + 1;
+
+  try {
+    const sessionResult = await createYoupiPaymentSession({
+      bookingId: booking.id,
+      amount: booking.grandTotal,
+      guestName: `${booking.guestDetails.firstName} ${booking.guestDetails.lastName}`.trim(),
+      guestPhone: booking.guestDetails.phone,
+      guestEmail: booking.guestDetails.email,
+      hotelName: booking.hotelName,
+      roomName: booking.roomName,
+      returnUrl,
+      attemptNumber
+    });
+
+    booking.gatewayPaymentId = sessionResult.paymentId;
+    booking.gatewayOrderId = sessionResult.orderId;
+    booking.checkoutUrl = sessionResult.checkoutUrl;
+    booking.paymentAttemptsCount = attemptNumber;
+    booking.paymentStatus = 'Pending';
+    booking.settlementStatus = 'UNSETTLED';
+
+    await execute('UPDATE bookings SET data = ? WHERE id = ? AND user_id = ?', [
+      JSON.stringify(booking), booking.id, user.id
+    ]);
+
+    const paymentRecordId = `pay_${randomUUID()}`;
+    await execute(
+      `INSERT INTO payments (
+        id, booking_id, gateway_payment_id, gateway_order_id, payment_method,
+        amount, currency, payment_status, settlement_status, utr,
+        webhook_delivery_id, created_at, completed_at, metadata, raw_payload
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        paymentRecordId,
+        booking.id,
+        sessionResult.paymentId,
+        sessionResult.orderId,
+        'UPI',
+        booking.grandTotal,
+        'INR',
+        'INITIATED',
+        'UNSETTLED',
+        null,
+        null,
+        new Date().toISOString(),
+        null,
+        JSON.stringify({ attemptNumber, checkoutUrl: sessionResult.checkoutUrl }),
+        null
+      ]
+    );
+
+    return response.json({
+      booking,
+      paymentId: sessionResult.paymentId,
+      orderId: sessionResult.orderId,
+      checkoutUrl: sessionResult.checkoutUrl
+    });
+  } catch (error) {
+    console.error('YOUPI PG payment retry error:', error);
+    return response.status(502).json({
+      error: error instanceof Error ? error.message : 'Could not retry payment with YOUPI PG.'
+    });
+  }
+}));
+
+// 3. Payment Status & Payment Records Check
+app.get('/api/payments/status/:bookingId', asyncRoute(async (request: Request, response: Response) => {
+  const user = await findUser(request);
+  const admin = await findAdmin(request);
+  if (!user && !admin) {
+    return response.status(401).json({ error: 'Authentication required.' });
+  }
+
+  const { bookingId } = request.params;
+  const bookingRows = await query<{ data: string }>(
+    admin
+      ? 'SELECT data FROM bookings WHERE id = ?'
+      : 'SELECT data FROM bookings WHERE id = ? AND user_id = ?',
+    admin ? [bookingId] : [bookingId, user!.id]
+  );
+
+  if (!bookingRows[0]) {
+    return response.status(404).json({ error: 'Reservation not found.' });
+  }
+
+  const booking = JSON.parse(bookingRows[0].data) as Booking;
+
+  // Retrieve payment attempts history
+  const payments = await query<PaymentRecord>(
+    'SELECT id, booking_id as bookingId, gateway_payment_id as gatewayPaymentId, gateway_order_id as gatewayOrderId, payment_method as paymentMethod, amount, currency, payment_status as paymentStatus, settlement_status as settlementStatus, utr, webhook_delivery_id as webhookDeliveryId, created_at as createdAt, completed_at as completedAt FROM payments WHERE booking_id = ? ORDER BY created_at DESC',
+    [bookingId]
+  );
+
+  // Optional background reconciliation sync if gatewayPaymentId is active and not yet reconciled
+  if (booking.gatewayPaymentId && booking.settlementStatus !== 'RECONCILED') {
+    try {
+      const liveSession = await queryYoupiPayment(booking.gatewayPaymentId);
+      // Strictly verify rules: only mark paid if RECONCILED with UPI and settlementState === 'RECONCILED'
+      if (liveSession && liveSession.status === 'RECONCILED' && liveSession.method === 'UPI' && liveSession.settlementState === 'RECONCILED') {
+        booking.paymentStatus = 'Paid';
+        booking.settlementStatus = 'RECONCILED';
+        if (liveSession.utr) booking.utr = liveSession.utr;
+        booking.paymentCompletedAt = liveSession.completedAt || new Date().toISOString();
+        await execute('UPDATE bookings SET data = ? WHERE id = ?', [JSON.stringify(booking), booking.id]);
+      }
+    } catch {
+      // Best-effort check; continue if gateway unreachable
+    }
+  }
+
+  return response.json({
+    booking,
+    payments
+  });
+}));
+
+// 4. Admin View Payment Attempts
+app.get('/api/admin/payments/:bookingId', asyncRoute(async (request: Request, response: Response) => {
+  const admin = await requireAdmin(request, response);
+  if (!admin) return;
+
+  const { bookingId } = request.params;
+  const payments = await query<PaymentRecord>(
+    'SELECT id, booking_id as bookingId, gateway_payment_id as gatewayPaymentId, gateway_order_id as gatewayOrderId, payment_method as paymentMethod, amount, currency, payment_status as paymentStatus, settlement_status as settlementStatus, utr, webhook_delivery_id as webhookDeliveryId, created_at as createdAt, completed_at as completedAt FROM payments WHERE booking_id = ? ORDER BY created_at DESC',
+    [bookingId]
+  );
+
+  return response.json({ payments });
 }));
 
 app.patch('/api/bookings/:id', asyncRoute(async (request, response) => {

@@ -40,6 +40,7 @@ interface BookingContextType {
   priceBreakdown: PriceBreakdown;
   bookings: Booking[];
   createBooking: (paymentMethod: Booking['paymentMethod']) => Promise<Booking>;
+  initiateUpiPayment: () => Promise<{ booking: Booking; checkoutUrl: string; paymentId: string; orderId: string }>;
   getBookingById: (id: string) => Booking | undefined;
   modifyBooking: (id: string, updates: Partial<Booking>) => Promise<void>;
   cancelBooking: (id: string, reason: string) => Promise<void>;
@@ -265,6 +266,46 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
     return result.booking;
   };
 
+  const initiateUpiPayment = async (): Promise<{ booking: Booking; checkoutUrl: string; paymentId: string; orderId: string }> => {
+    if (!draft.hotel || !draft.room) throw new Error('Select a hotel and room before booking.');
+    const returnUrl = `${window.location.origin}/confirmation`;
+    const bookingRequest = {
+      hotelId: draft.hotel.id,
+      roomId: draft.room.id,
+      ratePlanId: (draft.ratePlan || draft.room.ratePlans[0]).id,
+      checkIn: draft.checkIn,
+      checkOut: draft.checkOut,
+      roomsCount: draft.roomsCount,
+      adultsCount: draft.adultsCount,
+      childrenCount: draft.childrenCount,
+      guestDetails: draft.guestDetails,
+      selectedAddOns: draft.selectedAddOns.map(({ addOn, quantity }) => ({ addOnId: addOn.id, quantity })),
+      couponCode: draft.appliedCoupon?.code,
+      paymentMethod: 'UPI' as const
+    };
+
+    const res = await apiRequest<{
+      booking: Booking;
+      paymentId: string;
+      orderId: string;
+      amount: string;
+      currency: string;
+      checkoutUrl: string;
+      status: string;
+    }>('/payments/create-session', {
+      method: 'POST',
+      body: JSON.stringify({ bookingRequest, returnUrl })
+    });
+
+    setBookings((previous) => [res.booking, ...previous]);
+    return {
+      booking: res.booking,
+      checkoutUrl: res.checkoutUrl,
+      paymentId: res.paymentId,
+      orderId: res.orderId
+    };
+  };
+
   const getBookingById = (id: string) => {
     return bookings.find((b) => b.id.toUpperCase() === id.toUpperCase());
   };
@@ -360,6 +401,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
         priceBreakdown,
         bookings,
         createBooking,
+        initiateUpiPayment,
         getBookingById,
         modifyBooking,
         cancelBooking,

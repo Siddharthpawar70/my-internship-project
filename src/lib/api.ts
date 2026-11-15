@@ -40,3 +40,41 @@ export async function uploadBase64Image(dataUrl: string): Promise<{ url: string;
     body: JSON.stringify({ dataUrl })
   });
 }
+
+export async function createPaymentSession(data: {
+  bookingRequest?: any;
+  bookingId?: string;
+  returnUrl?: string;
+}): Promise<{
+  booking: any;
+  paymentId: string;
+  orderId: string;
+  amount: string;
+  currency: string;
+  checkoutUrl: string;
+  status: string;
+}> {
+  return apiRequest('/payments/create-session', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function retryPaymentSession(bookingId: string, returnUrl?: string): Promise<{
+  booking: any;
+  paymentId: string;
+  orderId: string;
+  checkoutUrl: string;
+}> {
+  return apiRequest('/payments/retry', {
+    method: 'POST',
+    body: JSON.stringify({ bookingId, returnUrl })
+  });
+}
+
+export async function getPaymentStatus(bookingId: string): Promise<{
+  booking: any;
+  payments: any[];
+}> {
+  return apiRequest(`/payments/status/${encodeURIComponent(bookingId)}`);
+}

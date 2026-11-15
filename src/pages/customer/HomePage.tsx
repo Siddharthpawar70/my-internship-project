@@ -30,7 +30,7 @@ export function HomePage() {
         {/* Luxury Background Image with subtle zoom */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=80"
+            src="/upload/images/resort/Aura Horizon Beachfront Resort.png"
             alt="Luxury Indian Resort"
             className="w-full h-full object-cover"
           />

@@ -5,7 +5,7 @@ export const DESTINATIONS = [
     name: 'Goa',
     state: 'Goa',
     tagline: 'Sun-kissed beaches, coastal luxury & heritage villas',
-    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Goa.png',
     hotelCount: 38,
     avgPrice: 6500,
     popularFor: ['Beaches', 'Nightlife', 'Seafood', 'Water Sports']
@@ -14,7 +14,7 @@ export const DESTINATIONS = [
     name: 'Udaipur',
     state: 'Rajasthan',
     tagline: 'Palatial royalty, tranquil lakes & romantic sunsets',
-    image: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Udaipur.png',
     hotelCount: 26,
     avgPrice: 9200,
     popularFor: ['Lake Pichola', 'Heritage Palaces', 'Royal Dining']
@@ -23,7 +23,7 @@ export const DESTINATIONS = [
     name: 'Mumbai',
     state: 'Maharashtra',
     tagline: 'Sea-facing high rises, glamorous culture & iconic promenades',
-    image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Mumbai.png',
     hotelCount: 45,
     avgPrice: 8400,
     popularFor: ['Marine Drive', 'Business Hubs', 'Luxury Dining']
@@ -32,7 +32,7 @@ export const DESTINATIONS = [
     name: 'Pune',
     state: 'Maharashtra',
     tagline: 'Boutique retreats, lush hillside gateways & cultural heritage',
-    image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Pune.png',
     hotelCount: 32,
     avgPrice: 4800,
     popularFor: ['Koregaon Park', 'Osho Garden', 'Aga Khan Palace', 'Hill Escapes']
@@ -41,7 +41,7 @@ export const DESTINATIONS = [
     name: 'Jaipur',
     state: 'Rajasthan',
     tagline: 'The Pink City: Havelis, desert luxury & grandeur',
-    image: 'https://images.unsplash.com/photo-1603288940300-4b0559385c76?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Jaipur.png',
     hotelCount: 29,
     avgPrice: 6200,
     popularFor: ['Amer Fort', 'Hawa Mahal', 'Handicrafts', 'Boutique Havelis']
@@ -50,7 +50,7 @@ export const DESTINATIONS = [
     name: 'Bengaluru',
     state: 'Karnataka',
     tagline: 'Garden city elegance, tech suites & premier luxury',
-    image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Bengaluru.png',
     hotelCount: 40,
     avgPrice: 5900,
     popularFor: ['Cubbon Park', 'Brewery Strolls', 'Indiranagar', 'Tech Parks']
@@ -59,7 +59,7 @@ export const DESTINATIONS = [
     name: 'Manali',
     state: 'Himachal Pradesh',
     tagline: 'Snow-capped peaks, alpine wooden chalets & river retreats',
-    image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Manali.png',
     hotelCount: 24,
     avgPrice: 5100,
     popularFor: ['Solang Valley', 'Snow Chalets', 'Rohtang Pass', 'Cafes']
@@ -68,7 +68,7 @@ export const DESTINATIONS = [
     name: 'Kerala',
     state: 'Kerala',
     tagline: 'Emerald backwaters, spice plantations & Ayurvedic resorts',
-    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Kerala.png',
     hotelCount: 34,
     avgPrice: 7200,
     popularFor: ['Alleppey Houseboats', 'Munnar Tea Hills', 'Ayurveda Spa']
@@ -77,7 +77,7 @@ export const DESTINATIONS = [
     name: 'Delhi',
     state: 'NCR',
     tagline: 'Diplomatic enclaves, monumental history & 5-star elegance',
-    image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/New Delhi.png',
     hotelCount: 42,
     avgPrice: 6800,
     popularFor: ['Connaught Place', 'Lutyens Mansions', 'Old Delhi Delicacies']
@@ -86,7 +86,7 @@ export const DESTINATIONS = [
     name: 'Lonavala',
     state: 'Maharashtra',
     tagline: 'Misty hills, monsoon waterfalls & weekend private villas',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Lonavala.png',
     hotelCount: 22,
     avgPrice: 5600,
     popularFor: ['Tiger Point', 'Monsoon Trails', 'Private Pool Villas']
@@ -95,7 +95,7 @@ export const DESTINATIONS = [
     name: 'Hyderabad',
     state: 'Telangana',
     tagline: 'Nizami hospitality, lakeside palaces & contemporary luxury',
-    image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Hyderabad.png',
     hotelCount: 31,
     avgPrice: 5400,
     popularFor: ['Charminar', 'HITEC City', 'Biryani Food Trails', 'Falaknuma']
@@ -104,7 +104,7 @@ export const DESTINATIONS = [
     name: 'Shimla',
     state: 'Himachal Pradesh',
     tagline: 'Colonial charm, pine forests & panoramic Himalayan views',
-    image: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format&fit=crop&w=1000&q=80',
+    image: '/upload/images/destination/Shimla.png',
     hotelCount: 20,
     avgPrice: 6100,
     popularFor: ['The Mall Road', 'Ridge', 'Toy Train', 'Heritage Stays']
@@ -128,13 +128,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Luxury Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/The Grand Aurum & Spa.png',
     images: [
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/The Grand Aurum & Spa.png',
+      '/upload/images/destination/Pune.png',
+      '/upload/images/hotel/The Grand Aurum & Spa.png',
+      '/upload/images/destination/Pune.png'
     ],
     description: 'Immerse yourself in timeless elegance at The Grand Aurum & Spa. Located in the leafy canopy of Koregaon Park, this flagship property features marble colonnades, signature Ayurvedic therapies, temperature-controlled lap pools, and multi-cuisine fine dining curated by celebrity chefs.',
     checkInTime: '2:00 PM',
@@ -175,11 +174,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Business Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/Aura Heights Business & Suites.png',
     images: [
-      'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/Aura Heights Business & Suites.png',
+      '/upload/images/destination/Pune.png',
+      '/upload/images/hotel/Aura Heights Business & Suites.png',
+      '/upload/images/destination/Pune.png'
     ],
     description: 'Engineered for seamless productivity and urban convenience. Aura Heights offers ergonomic workstations, ultra-fast fiber Wi-Fi, 24-hour business lounges, and tranquil acoustic-glazed rooms right beside Pune airport.',
     checkInTime: '1:00 PM',
@@ -216,11 +216,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Luxury Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/The Marine Sovereign Mumbai.png',
     images: [
-      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/The Marine Sovereign Mumbai.png',
+      '/upload/images/destination/Mumbai.png',
+      '/upload/images/hotel/The Marine Sovereign Mumbai.png',
+      '/upload/images/destination/Mumbai.png'
     ],
     description: 'An architectural jewel set directly along the historic Colaba shoreline. Step through teakwood archways into expansive suites with sweeping sea views, butler service, Michelin-inspired dining, and vintage cocktail lounges.',
     checkInTime: '2:00 PM',
@@ -258,10 +259,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Resort',
-    heroImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Horizon Beachfront Resort.png',
     images: [
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Horizon Beachfront Resort.png',
+      '/upload/images/destination/Mumbai.png',
+      '/upload/images/resort/Aura Horizon Beachfront Resort.png',
+      '/upload/images/destination/Mumbai.png'
     ],
     description: 'Set amidst five acres of swaying palms with direct private access to Juhu Beach. Featuring open-air cabanas, sunset deck cocktail bar, bespoke wellness spa, and curated seafood grills.',
     checkInTime: '3:00 PM',
@@ -298,11 +301,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Resort',
-    heroImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Azura Coastal Sanctuary.png',
     images: [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Azura Coastal Sanctuary.png',
+      '/upload/images/destination/Goa.png',
+      '/upload/images/resort/Aura Azura Coastal Sanctuary.png',
+      '/upload/images/destination/Goa.png'
     ],
     description: 'Blended seamlessly between historic Goan-Portuguese courtyards and modern beach luxury. Featuring red-terracotta roofed suites, handcrafted azulejo tiles, an infinity pool touching the ocean, and sunset live jazz nights.',
     checkInTime: '2:00 PM',
@@ -340,10 +344,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Boutique Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Sunkissed Palms Boutique Resort.png',
     images: [
-      'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Sunkissed Palms Boutique Resort.png',
+      '/upload/images/destination/Goa.png',
+      '/upload/images/resort/Sunkissed Palms Boutique Resort.png',
+      '/upload/images/destination/Goa.png'
     ],
     description: 'A vibrant boutique hideaway perched on the Vagator red laterite cliffs. Surrounded by organic gardens, bamboo chalets, yoga decks, and an electric rooftop sunset cocktail lounge.',
     checkInTime: '2:00 PM',
@@ -380,11 +386,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Heritage Palace',
-    heroImage: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/Palacio de Aura Lake Palace.png',
     images: [
-      'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/Palacio de Aura Lake Palace.png',
+      '/upload/images/destination/Udaipur.png',
+      '/upload/images/hotel/Palacio de Aura Lake Palace.png',
+      '/upload/images/destination/Udaipur.png'
     ],
     description: 'Constructed with shimmering white Makrana marble and gilded arches, Palacio de Aura transports you into Rajasthan golden era. Accessible only by private solar-powered royal boats, every suite overlooks the Aravalli hills and City Palace.',
     checkInTime: '2:00 PM',
@@ -421,10 +428,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Heritage Palace',
-    heroImage: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/The Regal Rajputana Haveli & Resort.png',
     images: [
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1603288940300-4b0559385c76?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/The Regal Rajputana Haveli & Resort.png',
+      '/upload/images/destination/Jaipur.png',
+      '/upload/images/resort/The Regal Rajputana Haveli & Resort.png',
+      '/upload/images/destination/Jaipur.png'
     ],
     description: 'Immerse in royal Pink City hospitality with intricate jali windows, live shehnai morning recitals, peacock courtyards, and starlit barbecue dinners beneath the Aravali ramparts.',
     checkInTime: '2:00 PM',
@@ -461,10 +470,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Boutique Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/Aura Botanica Garden Suites.png',
     images: [
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/Aura Botanica Garden Suites.png',
+      '/upload/images/destination/Bengaluru.png',
+      '/upload/images/hotel/Aura Botanica Garden Suites.png',
+      '/upload/images/destination/Bengaluru.png'
     ],
     description: 'Designed as a living garden sanctuary, Aura Botanica features vertical terrariums, private balcony plunge pools, hydroponic farm-to-table dining, and sleek micro-distillery craft cocktails.',
     checkInTime: '2:00 PM',
@@ -501,10 +512,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Resort',
-    heroImage: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Pinecrest Alpine Chalet.png',
     images: [
-      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Pinecrest Alpine Chalet.png',
+      '/upload/images/destination/Manali.png',
+      '/upload/images/resort/Aura Pinecrest Alpine Chalet.png',
+      '/upload/images/destination/Manali.png'
     ],
     description: 'Snuggle beside blazing stone fireplaces as snow gently dusts towering pine trees outside. Handcrafted cedar interiors, underfloor heating, heated outdoor jacuzzis, and authentic Himachali culinary evenings.',
     checkInTime: '1:00 PM',
@@ -541,10 +554,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Resort',
-    heroImage: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Backwater Palms & Ayurvedic Retreat.png',
     images: [
-      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Backwater Palms & Ayurvedic Retreat.png',
+      '/upload/images/destination/Kerala.png',
+      '/upload/images/resort/Aura Backwater Palms & Ayurvedic Retreat.png',
+      '/upload/images/destination/Kerala.png'
     ],
     description: 'Resting on the serene banks of Vembanad Lake. Traditional Kerala tharavadu cottages with open-to-sky lotus courtyards, doctor-certified Panchakarma wellness therapies, and private kettuvallam sunset cruises.',
     checkInTime: '2:00 PM',
@@ -581,10 +596,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Luxury Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/The Imperial Aura Diplomatic Court.png',
     images: [
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/The Imperial Aura Diplomatic Court.png',
+      '/upload/images/destination/New Delhi.png',
+      '/upload/images/hotel/The Imperial Aura Diplomatic Court.png',
+      '/upload/images/destination/New Delhi.png'
     ],
     description: 'Steeped in 1930s high-society heritage, The Imperial Aura features an art collection rivaling major museums, 24-carat gold accented high ceilings, afternoon high tea in the atrium, and diplomatic security suites.',
     checkInTime: '2:00 PM',
@@ -621,10 +638,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: true,
     luxury: true,
     type: 'Resort',
-    heroImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Mistwood Cascades & Villas.png',
     images: [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Mistwood Cascades & Villas.png',
+      '/upload/images/destination/Lonavala.png',
+      '/upload/images/resort/Aura Mistwood Cascades & Villas.png',
+      '/upload/images/destination/Lonavala.png'
     ],
     description: 'Enveloped in rolling Sahyadri mist and gushing monsoon ravines. Each glass villa features an individual heated infinity plunge pool, outdoor rain showers, stone barbecue hearths, and stargazing binoculars.',
     checkInTime: '2:00 PM',
@@ -662,10 +681,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: true,
     type: 'Luxury Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/The Pearl Nizami & Suites.png',
     images: [
-      'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/The Pearl Nizami & Suites.png',
+      '/upload/images/destination/Hyderabad.png',
+      '/upload/images/hotel/The Pearl Nizami & Suites.png',
+      '/upload/images/destination/Hyderabad.png'
     ],
     description: 'A tribute to the grand Nizams of Deccan. Enjoy ornate crystal chandeliers, fragrant jasmine courtyards, our world-renowned dum biryani masterclasses, and marble infinity pool overlooking the city skyline.',
     checkInTime: '2:00 PM',
@@ -702,10 +723,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Boutique Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/Aura Cedarwood Heritage Lodge.png',
     images: [
-      'https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/Aura Cedarwood Heritage Lodge.png',
+      '/upload/images/destination/Shimla.png',
+      '/upload/images/hotel/Aura Cedarwood Heritage Lodge.png',
+      '/upload/images/destination/Shimla.png'
     ],
     description: 'Perched along the historic pedestrian ridge, Aura Cedarwood features bay-window suites looking onto the snow-capped Shivalik range, roaring fireplaces, vintage billiards room, and authentic afternoon scones.',
     checkInTime: '2:00 PM',
@@ -742,9 +765,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Business Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/Aura Silicon Hub Tech Suites.png',
     images: [
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/Aura Silicon Hub Tech Suites.png',
+      '/upload/images/destination/Pune.png',
+      '/upload/images/hotel/Aura Silicon Hub Tech Suites.png',
+      '/upload/images/destination/Pune.png'
     ],
     description: 'Designed specifically for tech leaders and corporate road warriors. Ergonomic Herman Miller seating, 4K video conference screens, soundproof sleep pods, and quick access to major IT campuses.',
     checkInTime: '12:00 PM',
@@ -780,9 +806,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Boutique Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/The Bohemian Aura Suites.png',
     images: [
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/The Bohemian Aura Suites.png',
+      '/upload/images/destination/Mumbai.png',
+      '/upload/images/hotel/The Bohemian Aura Suites.png',
+      '/upload/images/destination/Mumbai.png'
     ],
     description: 'Nestled on fashionable Pali Hill amidst indie boutiques, celebrity cafes, and leafy gulmohar trees. Characterized by mid-century furnishings, vinyl record players in each suite, and artisan coffee bars.',
     checkInTime: '2:00 PM',
@@ -819,9 +848,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Resort',
-    heroImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Eco Lagoon Eco-Villas.png',
     images: [
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Eco Lagoon Eco-Villas.png',
+      '/upload/images/destination/Goa.png',
+      '/upload/images/resort/Aura Eco Lagoon Eco-Villas.png',
+      '/upload/images/destination/Goa.png'
     ],
     description: 'Eco-conscious barefoot luxury built on stilt timber pavilions over a tranquil mangrove lagoon. Wake up to kingfishers calling, organic vegan breakfasts, and kayak tours into hidden sea caves.',
     checkInTime: '2:00 PM',
@@ -858,9 +890,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: true,
     type: 'Luxury Hotel',
-    heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/resort/Aura Prestige Golf & Convention Resort.png',
     images: [
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/resort/Aura Prestige Golf & Convention Resort.png',
+      '/upload/images/destination/Bengaluru.png',
+      '/upload/images/resort/Aura Prestige Golf & Convention Resort.png',
+      '/upload/images/destination/Bengaluru.png'
     ],
     description: 'Spanning 40 lush landscaped acres with an 18-hole golf academy, grand convention halls, clay tennis courts, and tranquil pool villas for both leisure families and corporate summits.',
     checkInTime: '2:00 PM',
@@ -896,9 +931,12 @@ export const INITIAL_HOTELS: Hotel[] = [
     featured: false,
     luxury: false,
     type: 'Heritage Palace',
-    heroImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+    heroImage: '/upload/images/hotel/Aura Amber Boutique Palace.png',
     images: [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'
+      '/upload/images/hotel/Aura Amber Boutique Palace.png',
+      '/upload/images/destination/Jaipur.png',
+      '/upload/images/hotel/Aura Amber Boutique Palace.png',
+      '/upload/images/destination/Jaipur.png'
     ],
     description: 'An oasis of Rajput tranquility in stylish C-Scheme. Featuring antique brass lamps, painted frescoes, candlelit courtyard dining, and soothing royal foot reflexology.',
     checkInTime: '2:00 PM',
@@ -935,8 +973,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 4999,
     originalPrice: 6500,
     images: [
-      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/hotel/The Grand Aurum & Spa.png',
+      '/upload/images/destination/Pune.png'
     ],
     amenities: ['King Size Bed', 'Garden View', 'Rain Shower', 'High-Speed Wi-Fi', 'Espresso Machine', 'LED Smart TV', 'Electronic Safe'],
     availableCount: 8,
@@ -990,8 +1028,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 8499,
     originalPrice: 11000,
     images: [
-      'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/hotel/The Grand Aurum & Spa.png',
+      '/upload/images/destination/Pune.png'
     ],
     amenities: ['Separate Living Parlour', 'Freestanding Soaking Tub', 'Walk-in Wardrobe', 'Balcony with Pool View', 'Complimentary Butler Service', 'Hermès Toiletries'],
     availableCount: 4,
@@ -1036,7 +1074,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 12500,
     originalPrice: 15500,
     images: [
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/hotel/The Grand Aurum & Spa.png',
+      '/upload/images/destination/Pune.png'
     ],
     amenities: ['2 Master Bedrooms', 'Private Terrace Dining', 'Kitchenette', 'Dual Bathrooms', 'Kids Play Corner', 'Smart Home Controls'],
     availableCount: 3,
@@ -1074,7 +1113,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 9800,
     originalPrice: 12500,
     images: [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/hotel/The Marine Sovereign Mumbai.png',
+      '/upload/images/destination/Mumbai.png'
     ],
     amenities: ['City Heritage Views', 'Marble Ensuite Bathroom', 'Pillow Menu', 'Bose Sound System', 'Turndown Service'],
     availableCount: 6,
@@ -1104,7 +1144,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 16500,
     originalPrice: 21000,
     images: [
-      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/hotel/The Marine Sovereign Mumbai.png',
+      '/upload/images/destination/Mumbai.png'
     ],
     amenities: ['Direct Gateway of India Sea Views', 'Private Bar', 'Jacuzzi with Ocean Vistas', '24h Personal Butler'],
     availableCount: 3,
@@ -1135,7 +1176,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 8200,
     originalPrice: 10500,
     images: [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/resort/Aura Azura Coastal Sanctuary.png',
+      '/upload/images/destination/Goa.png'
     ],
     amenities: ['Private Garden Balcony', 'Outdoor Rain Shower', 'Handmade Azulejo Tiles', 'Illy Coffee Machine'],
     availableCount: 7,
@@ -1174,7 +1216,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 18500,
     originalPrice: 24000,
     images: [
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/resort/Aura Azura Coastal Sanctuary.png',
+      '/upload/images/destination/Goa.png'
     ],
     amenities: ['Private Infinity Plunge Pool', 'Direct Beach Gate', 'Sunken Living Lounge', 'Outdoor Bathtub', 'Dedicated Host'],
     availableCount: 2,
@@ -1205,7 +1248,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 12500,
     originalPrice: 16500,
     images: [
-      'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/hotel/Palacio de Aura Lake Palace.png',
+      '/upload/images/destination/Udaipur.png'
     ],
     amenities: ['Carved Marble Jharokha Window', 'Lake Pichola Water Views', 'Silk Furnishings', 'Royal Mewari Bath Salts'],
     availableCount: 5,
@@ -1236,7 +1280,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 6200,
     originalPrice: 8500,
     images: [
-      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80'
+      '/upload/images/resort/Aura Pinecrest Alpine Chalet.png',
+      '/upload/images/destination/Manali.png'
     ],
     amenities: ['Stone Fireplace', 'Radiant Underfloor Heating', 'Pine Balcony with Snow Peaks View', 'Hot Tub'],
     availableCount: 6,
@@ -1266,7 +1311,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 2,
     basePrice: 3499,
     originalPrice: 4500,
-    images: ['https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/Aura Heights Business & Suites.png',
+      '/upload/images/destination/Pune.png'
+    ],
     amenities: ['Ergonomic Task Desk', 'Fiber Wi-Fi', 'Soundproof Glass', 'Nespresso Pods'],
     availableCount: 9,
     ratePlans: [
@@ -1294,7 +1342,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 7600,
     originalPrice: 9900,
-    images: ['https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Aura Horizon Beachfront Resort.png',
+      '/upload/images/destination/Mumbai.png'
+    ],
     amenities: ['Sea Facing Balcony', 'Tropical Rain Shower', 'High-Speed Wi-Fi', 'Espresso Machine'],
     availableCount: 8,
     ratePlans: [
@@ -1321,7 +1372,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 4,
     basePrice: 12500,
     originalPrice: 16000,
-    images: ['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Aura Horizon Beachfront Resort.png',
+      '/upload/images/destination/Mumbai.png'
+    ],
     amenities: ['Private Beach Access', 'Jacuzzi with Sea View', 'Dedicated Butler Service', 'Hermes Toiletries'],
     availableCount: 4,
     ratePlans: [
@@ -1349,7 +1403,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 2,
     basePrice: 5200,
     originalPrice: 6900,
-    images: ['https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Sunkissed Palms Boutique Resort.png',
+      '/upload/images/destination/Goa.png'
+    ],
     amenities: ['Cliff Garden View', 'Organic Cotton Bedding', 'Espresso Bar', 'Bamboo Balcony'],
     availableCount: 6,
     ratePlans: [
@@ -1377,7 +1434,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 6499,
     originalPrice: 8500,
-    images: ['https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/The Regal Rajputana Haveli & Resort.png',
+      '/upload/images/destination/Jaipur.png'
+    ],
     amenities: ['Hand-carved Jharokha Window', 'Courtyard View', 'Royal Ayurvedic Toiletries', 'Brass Soaking Tub'],
     availableCount: 7,
     ratePlans: [
@@ -1405,7 +1465,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 5999,
     originalPrice: 7800,
-    images: ['https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/Aura Botanica Garden Suites.png',
+      '/upload/images/destination/Bengaluru.png'
+    ],
     amenities: ['Private Balcony Greenery', 'Gigabit Fiber Wi-Fi', 'Smart Lighting', 'Deep Soaking Tub'],
     availableCount: 8,
     ratePlans: [
@@ -1433,7 +1496,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 7800,
     originalPrice: 10500,
-    images: ['https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Aura Backwater Palms & Ayurvedic Retreat.png',
+      '/upload/images/destination/Kerala.png'
+    ],
     amenities: ['Open-to-Sky Courtyard Shower', 'Lakefront Verandah', 'Ayurvedic Herbal Bar', 'Lotus Pond Access'],
     availableCount: 6,
     ratePlans: [
@@ -1461,7 +1527,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 8900,
     originalPrice: 12000,
-    images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/The Imperial Aura Diplomatic Court.png',
+      '/upload/images/destination/New Delhi.png'
+    ],
     amenities: ['Italian Marble Ensuite', 'Diplomatic Security Lock', 'Antique Persian Rugs', 'High Tea Service'],
     availableCount: 7,
     ratePlans: [
@@ -1489,7 +1558,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 7200,
     originalPrice: 9500,
-    images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Aura Mistwood Cascades & Villas.png',
+      '/upload/images/destination/Lonavala.png'
+    ],
     amenities: ['Heated Infinity Plunge Pool', 'Sahyadri Valley Vista', 'Outdoor Stone Fireplace', 'Stargazing Telescope'],
     availableCount: 5,
     ratePlans: [
@@ -1517,7 +1589,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 5800,
     originalPrice: 7500,
-    images: ['https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/The Pearl Nizami & Suites.png',
+      '/upload/images/destination/Hyderabad.png'
+    ],
     amenities: ['Nizami Carved Headboard', 'Skyline View', 'Jasmine Scented Bath Salts', 'Luxury Minibar'],
     availableCount: 8,
     ratePlans: [
@@ -1545,7 +1620,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 5400,
     originalPrice: 7000,
-    images: ['https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/Aura Cedarwood Heritage Lodge.png',
+      '/upload/images/destination/Shimla.png'
+    ],
     amenities: ['Bay-Window Himalayan View', 'Wood Stove Heating', 'Electric Heated Blankets', 'Heritage Teak Desk'],
     availableCount: 6,
     ratePlans: [
@@ -1573,7 +1651,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 2,
     basePrice: 2999,
     originalPrice: 4200,
-    images: ['https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/Aura Silicon Hub Tech Suites.png',
+      '/upload/images/destination/Pune.png'
+    ],
     amenities: ['Ergonomic Workstation', 'Dual Monitor Hookup', '1 Gbps Wi-Fi', 'Soundproof Glass'],
     availableCount: 10,
     ratePlans: [
@@ -1601,7 +1682,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 2,
     basePrice: 5500,
     originalPrice: 7200,
-    images: ['https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/The Bohemian Aura Suites.png',
+      '/upload/images/destination/Mumbai.png'
+    ],
     amenities: ['Vinyl Record Turntable', 'Artisan Coffee Maker', 'Mid-Century Furnishings', 'Bandra Street View'],
     availableCount: 5,
     ratePlans: [
@@ -1629,7 +1713,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 4600,
     originalPrice: 6000,
-    images: ['https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Aura Eco Lagoon Eco-Villas.png',
+      '/upload/images/destination/Goa.png'
+    ],
     amenities: ['Overwater Lagoon Balcony', 'Outdoor Stone Shower', '100% Solar Powered', 'Organic Toiletries'],
     availableCount: 7,
     ratePlans: [
@@ -1657,7 +1744,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 6900,
     originalPrice: 8900,
-    images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/resort/Aura Prestige Golf & Convention Resort.png',
+      '/upload/images/destination/Bengaluru.png'
+    ],
     amenities: ['18-Hole Championship Golf Views', 'Soaking Tub', 'Pillow Menu', 'Executive Lounge Access'],
     availableCount: 8,
     ratePlans: [
@@ -1685,7 +1775,10 @@ export const INITIAL_ROOMS: RoomType[] = [
     maxOccupancy: 3,
     basePrice: 4800,
     originalPrice: 6200,
-    images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'],
+    images: [
+      '/upload/images/hotel/Aura Amber Boutique Palace.png',
+      '/upload/images/destination/Jaipur.png'
+    ],
     amenities: ['Marble Stepwell View', 'Antique Brass Lamps', 'Frescoes', 'Foot Reflexology Voucher'],
     availableCount: 6,
     ratePlans: [
@@ -1914,7 +2007,7 @@ export const INITIAL_BOOKINGS: Booking[] = [
     hotelName: 'The Grand Aurum & Spa',
     hotelAddress: '88 North Main Road, Koregaon Park, Pune, Maharashtra 411001',
     hotelCity: 'Pune',
-    hotelImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+    hotelImage: '/upload/images/hotel/The Grand Aurum & Spa.png',
     hotelPhone: '+91 20 6688 9900',
     roomId: 'room-pune-grand-deluxe',
     roomName: 'Deluxe Courtyard Room',
@@ -1968,7 +2061,7 @@ export const INITIAL_BOOKINGS: Booking[] = [
     hotelName: 'The Marine Sovereign Mumbai',
     hotelAddress: 'Apollo Bunder, Colaba, Mumbai 400001',
     hotelCity: 'Mumbai',
-    hotelImage: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80',
+    hotelImage: '/upload/images/hotel/The Marine Sovereign Mumbai.png',
     hotelPhone: '+91 22 2288 1100',
     roomId: 'room-mumbai-colaba-deluxe',
     roomName: 'Heritage City View Deluxe',
@@ -2012,7 +2105,7 @@ export const INITIAL_BOOKINGS: Booking[] = [
     hotelName: 'Aura Azura Coastal Sanctuary',
     hotelAddress: 'Fort Aguada Road, Candolim, North Goa 403515',
     hotelCity: 'Goa',
-    hotelImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80',
+    hotelImage: '/upload/images/resort/Aura Azura Coastal Sanctuary.png',
     hotelPhone: '+91 832 249 9000',
     roomId: 'room-goa-azura-deluxe',
     roomName: 'Portuguese Verandah Deluxe',

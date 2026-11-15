@@ -7,3 +7,6 @@ coverage/
 .env*
 !.env.example
 .data/
+/YouPI-PG-main/assets/Desktop.mp4
+/YouPI-PG-main/assets/Desktop.mp4
+/YouPI-PG-main/assets/Mobile.mp4

@@ -138,9 +138,19 @@ export interface Booking {
   discountAmount: number;
   grandTotal: number;
   paymentMethod: 'UPI' | 'Credit Card' | 'Debit Card' | 'Card' | 'Net Banking' | 'Wallet' | 'Pay at Hotel';
-  paymentStatus: 'Pending' | 'Authorized' | 'Paid' | 'Failed' | 'Refunded';
+  paymentStatus: 'Pending' | 'Authorized' | 'Paid' | 'Failed' | 'Refunded' | 'Expired' | 'Cancelled';
   bookingStatus: 'Confirmed' | 'Checked In' | 'Checked Out' | 'Cancelled';
   bookedAt: string;
+  gatewayPaymentId?: string;
+  gatewayOrderId?: string;
+  settlementStatus?: 'UNSETTLED' | 'NOT_RECONCILED' | 'RECONCILED' | 'MANUAL_REVIEW' | 'NOT_BANK_SETTLEMENT' | 'NOT_APPLICABLE' | 'FAILED' | 'EXPIRED' | 'CANCELLED';
+  utr?: string;
+  paymentCreatedAt?: string;
+  paymentCompletedAt?: string;
+  webhookDeliveryId?: string;
+  paymentMetadata?: Record<string, unknown>;
+  checkoutUrl?: string;
+  paymentAttemptsCount?: number;
   assignedRoomNumber?: string;
   checkInTimestamp?: string;
   checkOutTimestamp?: string;
@@ -148,6 +158,33 @@ export interface Booking {
   refundAmount?: number;
   cancellationFee?: number;
   refundStatus?: 'None' | 'Refund Pending' | 'Refund Processing' | 'Refunded';
+}
+
+export interface PaymentRecord {
+  id: string;
+  bookingId: string;
+  gatewayPaymentId?: string;
+  gatewayOrderId: string;
+  paymentMethod: string;
+  amount: number;
+  currency: string;
+  paymentStatus: string;
+  settlementStatus: string;
+  utr?: string;
+  webhookDeliveryId?: string;
+  createdAt: string;
+  completedAt?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface PaymentSessionResponse {
+  booking: Booking;
+  paymentId: string;
+  orderId: string;
+  amount: string;
+  currency: string;
+  checkoutUrl: string;
+  status: string;
 }
 
 export interface Coupon {
