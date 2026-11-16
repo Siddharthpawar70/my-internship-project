@@ -89,6 +89,7 @@ type StoredUser = {
   role?: 'customer' | 'admin';
   avatar?: string;
   registeredAt: string;
+  lastLogin?: string;
 };
 
 type BookingRequest = {
@@ -950,6 +951,7 @@ app.post('/api/auth/register', asyncRoute(async (request, response, next) => {
     }
     const id = `usr_${randomUUID()}`;
     const now = new Date();
+    const nowTimestamp = now.toISOString().replace('T', ' ').substring(0, 19);
     const user: StoredUser = {
       id,
       name: name.trim(),
@@ -961,7 +963,8 @@ app.post('/api/auth/register', asyncRoute(async (request, response, next) => {
       joinedDate: now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
       status: 'approved',
       role: 'customer',
-      registeredAt: now.toISOString().replace('T', ' ').substring(0, 19)
+      registeredAt: nowTimestamp,
+      lastLogin: nowTimestamp
     };
     const salt = randomBytes(16).toString('hex');
     await execute('INSERT INTO users (id, email, password_salt, password_hash, data) VALUES (?, ?, ?, ?, ?)', [
@@ -995,14 +998,17 @@ app.post('/api/auth/login', asyncRoute(async (request, response) => {
   if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) return response.status(401).json({ error: 'Email or password is incorrect.' });
 
   const userData = JSON.parse(record.data) as StoredUser;
+  // Track last login timestamp
+  userData.lastLogin = new Date().toISOString().replace('T', ' ').substring(0, 19);
   // Auto-approve user upon login if account status was pending
   if (userData.status === 'pending') {
     userData.status = 'approved';
-    await execute('UPDATE users SET data = ? WHERE id = ?', [JSON.stringify(userData), record.id]);
   }
   if (userData.status === 'rejected') {
     return response.status(403).json({ error: 'Your account has been suspended or rejected. Please contact support.' });
   }
+
+  await execute('UPDATE users SET data = ? WHERE id = ?', [JSON.stringify(userData), record.id]);
 
   clearRateLimit(rateKey);
   await execute('DELETE FROM sessions WHERE user_id = ?', [record.id]);
@@ -1563,7 +1569,8 @@ app.get('/api/admin/users', asyncRoute(async (request, response) => {
       status: data.status || 'approved',
       role: data.role || 'customer',
       registeredAt: data.registeredAt || data.joinedDate || '',
-      joinedDate: data.joinedDate
+      joinedDate: data.joinedDate,
+      lastLogin: data.lastLogin || ''
     };
   });
   return response.json({ users });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -365,7 +365,7 @@ export function AdminDashboardPage() {
                   <DollarSign className="w-4 h-4 text-emerald-600" />
                 </div>
                 <p className="text-2xl font-bold text-gray-900">
-                  ₹{analytics.totalRevenue.toLocaleString('en-IN')}
+                  â‚¹{analytics.totalRevenue.toLocaleString('en-IN')}
                 </p>
                 <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold mt-2">
                   <TrendingUp className="w-3.5 h-3.5" />
@@ -429,12 +429,12 @@ export function AdminDashboardPage() {
               {/* Bar Visualizer */}
               <div className="grid grid-cols-6 gap-3 sm:gap-6 items-end h-48 pt-6 border-b border-gray-100">
                 {[
-                  { month: 'Apr', val: 65, rev: '₹14.2L' },
-                  { month: 'May', val: 72, rev: '₹18.5L' },
-                  { month: 'Jun', val: 80, rev: '₹22.1L' },
-                  { month: 'Jul', val: 84, rev: '₹25.8L' },
-                  { month: 'Aug', val: 88, rev: '₹28.4L' },
-                  { month: 'Oct (Now)', val: 92, rev: `₹${Math.round(analytics.totalRevenue / 100000)}L` }
+                  { month: 'Apr', val: 65, rev: 'â‚¹14.2L' },
+                  { month: 'May', val: 72, rev: 'â‚¹18.5L' },
+                  { month: 'Jun', val: 80, rev: 'â‚¹22.1L' },
+                  { month: 'Jul', val: 84, rev: 'â‚¹25.8L' },
+                  { month: 'Aug', val: 88, rev: 'â‚¹28.4L' },
+                  { month: 'Oct (Now)', val: 92, rev: `â‚¹${Math.round(analytics.totalRevenue / 100000)}L` }
                 ].map((item) => (
                   <div key={item.month} className="flex flex-col items-center gap-2 h-full justify-end group">
                     <span className="text-[10px] font-bold text-gray-500 group-hover:text-gray-900 transition-colors">
@@ -497,10 +497,10 @@ export function AdminDashboardPage() {
                           <p className="text-[10px] text-gray-500">{b.roomName}</p>
                         </td>
                         <td className="py-3.5 text-gray-600">
-                          {b.checkIn} → {b.checkOut}
+                          {b.checkIn} â†’ {b.checkOut}
                         </td>
                         <td className="py-3.5 font-bold text-gray-900">
-                          ₹{b.grandTotal.toLocaleString('en-IN')}
+                          â‚¹{b.grandTotal.toLocaleString('en-IN')}
                         </td>
                         <td className="py-3.5">
                           <StatusBadge status={b.bookingStatus} size="sm" />
@@ -566,11 +566,11 @@ export function AdminDashboardPage() {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 whitespace-nowrap shrink-0">Payment:</span>
                 {[
                   { label: 'All', value: 'All' },
-                  { label: '✓ UPI Reconciled', value: 'UPI-Reconciled' },
-                  { label: '⏳ UPI Pending', value: 'UPI-Pending' },
-                  { label: '⚠ Manual Review', value: 'UPI-Review' },
-                  { label: '🏨 Pay at Hotel', value: 'Pay at Hotel' },
-                  { label: '✗ Failed/Expired', value: 'Failed' },
+                  { label: 'âœ“ UPI Reconciled', value: 'UPI-Reconciled' },
+                  { label: 'â³ UPI Pending', value: 'UPI-Pending' },
+                  { label: 'âš  Manual Review', value: 'UPI-Review' },
+                  { label: 'ðŸ¨ Pay at Hotel', value: 'Pay at Hotel' },
+                  { label: 'âœ— Failed/Expired', value: 'Failed' },
                 ].map(({ label, value }) => (
                   <button
                     key={value}
@@ -636,7 +636,7 @@ export function AdminDashboardPage() {
                             <p className="text-[11px] text-gray-500">{b.roomName}</p>
                           </td>
                           <td className="py-3.5 px-4 text-gray-600">
-                            <p className="font-semibold text-gray-800">{b.checkIn} → {b.checkOut}</p>
+                            <p className="font-semibold text-gray-800">{b.checkIn} â†’ {b.checkOut}</p>
                             <p className="text-[10px] text-gray-400">{b.nights} nights ({b.adultsCount} adults)</p>
                           </td>
                           <td className="py-3.5 px-4 font-bold text-[#977341]">
@@ -658,10 +658,10 @@ export function AdminDashboardPage() {
                             )}
                           </td>
                           <td className="py-3.5 px-4">
-                            <p className="font-bold text-gray-900">₹{b.grandTotal.toLocaleString('en-IN')}</p>
+                            <p className="font-bold text-gray-900">â‚¹{b.grandTotal.toLocaleString('en-IN')}</p>
                             {/* Payment method label */}
                             <p className="text-[10px] text-gray-500 font-medium">
-                              {b.paymentMethod === 'UPI' ? '⚡ UPI' : b.paymentMethod === 'Pay at Hotel' ? '🏨 Pay at Hotel' : b.paymentMethod || '—'}
+                              {b.paymentMethod === 'UPI' ? 'âš¡ UPI' : b.paymentMethod === 'Pay at Hotel' ? 'ðŸ¨ Pay at Hotel' : b.paymentMethod || 'â€”'}
                             </p>
                             {/* Payment status badge */}
                             <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide ${
@@ -677,7 +677,7 @@ export function AdminDashboardPage() {
                             }`}>
                               {b.paymentStatus}
                             </span>
-                            {/* Settlement status — only show for UPI */}
+                            {/* Settlement status â€” only show for UPI */}
                             {b.paymentMethod === 'UPI' && b.settlementStatus && (
                               <p className={`text-[9px] font-mono mt-0.5 ${
                                 b.settlementStatus === 'RECONCILED'
@@ -686,19 +686,19 @@ export function AdminDashboardPage() {
                                   ? 'text-orange-600 font-bold'
                                   : 'text-gray-400'
                               }`}>
-                                {b.settlementStatus === 'RECONCILED' ? '✓ Reconciled' : b.settlementStatus}
+                                {b.settlementStatus === 'RECONCILED' ? 'âœ“ Reconciled' : b.settlementStatus}
                               </p>
                             )}
                             {/* UTR when available */}
                             {b.utr && (
                               <p className="text-[9px] text-gray-400 font-mono" title={`UTR: ${b.utr}`}>
-                                UTR: {b.utr.length > 14 ? b.utr.slice(0, 14) + '…' : b.utr}
+                                UTR: {b.utr.length > 14 ? b.utr.slice(0, 14) + 'â€¦' : b.utr}
                               </p>
                             )}
                             {/* Gateway payment ID */}
                             {b.gatewayPaymentId && (
                               <p className="text-[9px] text-gray-300 font-mono truncate max-w-[110px]" title={b.gatewayPaymentId}>
-                                GW: {b.gatewayPaymentId.slice(0, 8)}…
+                                GW: {b.gatewayPaymentId.slice(0, 8)}â€¦
                               </p>
                             )}
                           </td>
@@ -790,7 +790,7 @@ export function AdminDashboardPage() {
                       <div>
                         <span className="text-[10px] text-gray-400 font-bold block uppercase">Price / Night</span>
                         <span className="text-lg font-bold text-gray-900">
-                          ₹{item.pricePerNight.toLocaleString('en-IN')}
+                          â‚¹{item.pricePerNight.toLocaleString('en-IN')}
                         </span>
                       </div>
 
@@ -955,13 +955,13 @@ export function AdminDashboardPage() {
                     </div>
 
                     <h4 className="font-bold text-sm text-gray-800">
-                      {c.discountPercent ? `${c.discountPercent}% Off` : `₹${c.discountValue} Off`}
+                      {c.discountPercent ? `${c.discountPercent}% Off` : `â‚¹${c.discountValue} Off`}
                     </h4>
                     <p className="text-xs text-gray-500 mt-1 leading-relaxed">{c.description}</p>
 
                     <div className="mt-4 pt-3 border-t border-gray-100 text-[11px] text-gray-400 space-y-1">
-                      <p>Min Spend: ₹{(c.minSpend || c.minBookingValue || 0).toLocaleString('en-IN')}</p>
-                      <p>Max Discount: ₹{(c.maxDiscount || 0).toLocaleString('en-IN')}</p>
+                      <p>Min Spend: â‚¹{(c.minSpend || c.minBookingValue || 0).toLocaleString('en-IN')}</p>
+                      <p>Max Discount: â‚¹{(c.maxDiscount || 0).toLocaleString('en-IN')}</p>
                       <p>Valid Until: {c.validUntil}</p>
                     </div>
                   </div>
@@ -994,16 +994,27 @@ export function AdminDashboardPage() {
         {/* 6. USERS MANAGEMENT TAB */}
         {activeTab === 'users' && (
           <div className="space-y-6 animate-in fade-in duration-200">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#C5A880]">
-                Access Control & Security
-              </span>
-              <h1 className="font-display text-3xl font-bold text-gray-900 mt-0.5">
-                Registered Guest Accounts ({registeredUsers.length})
-              </h1>
-              <p className="text-xs text-gray-500 mt-1">
-                Approve, reject, or manage role permissions for user accounts registered via the StayAura portal.
-              </p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#C5A880]">
+                  Access Control &amp; Security
+                </span>
+                <h1 className="font-display text-3xl font-bold text-gray-900 mt-0.5">
+                  Registered Guest Accounts ({registeredUsers.length})
+                </h1>
+                <p className="text-xs text-gray-500 mt-1">
+                  Approve, reject, or manage role permissions for user accounts registered via the StayAura portal.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleRefresh}
+                disabled={isRefreshing || usersLoading}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#1E252B] text-white text-xs font-bold hover:bg-[#2D3748] transition-colors disabled:opacity-50 shrink-0 mt-1"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing || usersLoading ? 'animate-spin' : ''}`} />
+                {isRefreshing || usersLoading ? 'Refreshing...' : 'Refresh List'}
+              </button>
             </div>
 
             {usersLoading ? (
@@ -1021,6 +1032,7 @@ export function AdminDashboardPage() {
                         <th className="py-3 px-4">Email</th>
                         <th className="py-3 px-4">Role</th>
                         <th className="py-3 px-4">Registered</th>
+                        <th className="py-3 px-4">Last Login</th>
                         <th className="py-3 px-4">Approval Status</th>
                         <th className="py-3 px-4 text-right">Actions</th>
                       </tr>
@@ -1028,15 +1040,15 @@ export function AdminDashboardPage() {
                     <tbody className="divide-y divide-gray-100">
                       {registeredUsers.length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="py-10 text-center text-gray-400 text-sm">
-                            No registered users found.
+                          <td colSpan={8} className="py-10 text-center text-gray-400 text-sm">
+                            No registered users found. Users will appear here after they sign up or log in.
                           </td>
                         </tr>
                       ) : (
                         registeredUsers.map((u: AdminUser) => (
                           <tr key={u.id} className="hover:bg-gray-50/70 transition-colors">
                             <td className="py-3.5 px-4 font-mono text-[10px] text-gray-500 max-w-[100px] truncate">
-                              {u.id.slice(0, 16)}…
+                              {u.id.slice(0, 16)}â€¦
                             </td>
                             <td className="py-3.5 px-4 font-bold text-gray-900">{u.name}</td>
                             <td className="py-3.5 px-4 text-gray-600">{u.email}</td>
@@ -1045,7 +1057,8 @@ export function AdminDashboardPage() {
                                 {u.role === 'admin' ? 'Admin' : 'Customer'}
                               </span>
                             </td>
-                            <td className="py-3.5 px-4 text-gray-500">{u.registeredAt || '—'}</td>
+                            <td className="py-3.5 px-4 text-gray-500">{u.registeredAt || 'â€”'}</td>
+                            <td className="py-3.5 px-4 text-gray-500">{u.lastLogin || '—'}</td>
                             <td className="py-3.5 px-4">
                               <span
                                 className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${
@@ -1140,7 +1153,7 @@ export function AdminDashboardPage() {
                       <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
                         <div>
                           <span className="font-semibold text-gray-800">{rev.guestName || rev.userName || 'Verified Guest'}</span>
-                          <span className="text-gray-400"> • {rev.guestCity || rev.userLocation || 'India'}</span>
+                          <span className="text-gray-400"> â€¢ {rev.guestCity || rev.userLocation || 'India'}</span>
                         </div>
                         <span className="text-[10px] px-2 py-0.5 rounded bg-gray-100 text-gray-600">{rev.roomType || 'Deluxe'}</span>
                       </div>
@@ -1392,7 +1405,7 @@ export function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">Max Discount (₹)</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Max Discount (â‚¹)</label>
                   <input
                     type="number"
                     step={100}
@@ -1404,7 +1417,7 @@ export function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">Min Spend Required (₹)</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1">Min Spend Required (â‚¹)</label>
                 <input
                   type="number"
                   step={500}

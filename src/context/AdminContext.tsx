@@ -55,6 +55,7 @@ export interface AdminUser {
   role?: string;
   registeredAt: string;
   joinedDate?: string;
+  lastLogin?: string;
 }
 
 interface AdminContextType {
@@ -197,7 +198,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [hotels, setHotels] = useState<Hotel[]>(INITIAL_HOTELS);
   const [rooms, setRooms] = useState<RoomType[]>(INITIAL_ROOMS);
   const [adminBookings, setAdminBookings] = useState<Booking[]>(INITIAL_BOOKINGS);
-  const [registeredUsers, setRegisteredUsers] = useState<AdminUser[]>(INITIAL_ADMIN_USERS);
+  const [registeredUsers, setRegisteredUsers] = useState<AdminUser[]>([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [adminReviews, setAdminReviews] = useState<Review[]>([]);
 
@@ -252,11 +253,16 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
       // 3. Fetch real users from DB
       setUsersLoading(true);
-      const usersRes = await apiRequest<{ users: AdminUser[] }>('/admin/users').catch(() => null);
-      if (usersRes?.users) {
-        setRegisteredUsers(usersRes.users);
+      try {
+        const usersRes = await apiRequest<{ users: AdminUser[] }>('/admin/users');
+        if (usersRes?.users) {
+          setRegisteredUsers(usersRes.users);
+        }
+      } catch {
+        // Keep existing list on error; do not fall back to mock data
+      } finally {
+        setUsersLoading(false);
       }
-      setUsersLoading(false);
 
       // 4. Fetch real rooms from DB
       const roomsRes = await apiRequest<{ rooms: RoomType[] }>('/admin/rooms').catch(() => null);
@@ -358,7 +364,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     await apiRequest<void>('/admin/auth/logout', { method: 'DELETE' }).catch(() => {});
     setAdminUser(null);
     setAdminBookings(INITIAL_BOOKINGS);
-    setRegisteredUsers(INITIAL_ADMIN_USERS);
+    setRegisteredUsers([]);
     setAdminReviews([]);
     setCoupons(COUPONS_LIST);
     setStats(defaultStats);
