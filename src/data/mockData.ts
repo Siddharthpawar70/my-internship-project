@@ -131,9 +131,10 @@ export const INITIAL_HOTELS: Hotel[] = [
     heroImage: '/upload/images/hotel/The Grand Aurum & Spa.png',
     images: [
       '/upload/images/hotel/The Grand Aurum & Spa.png',
-      '/upload/images/destination/Pune.png',
-      '/upload/images/hotel/The Grand Aurum & Spa.png',
-      '/upload/images/destination/Pune.png'
+      '/upload/images/hotel/The Grand Aurum & Spa - Deluxe Suite.jpg',
+      '/upload/images/hotel/The Grand Aurum & Spa - Fine Dining.jpg',
+      '/upload/images/hotel/The Grand Aurum & Spa - Infinity Pool.jpg',
+      '/upload/images/hotel/The Grand Aurum & Spa - Kids Play Area.jpg'
     ],
     description: 'Immerse yourself in timeless elegance at The Grand Aurum & Spa. Located in the leafy canopy of Koregaon Park, this flagship property features marble colonnades, signature Ayurvedic therapies, temperature-controlled lap pools, and multi-cuisine fine dining curated by celebrity chefs.',
     checkInTime: '2:00 PM',
@@ -973,8 +974,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 4999,
     originalPrice: 6500,
     images: [
-      '/upload/images/hotel/The Grand Aurum & Spa.png',
-      '/upload/images/destination/Pune.png'
+      '/upload/images/hotel/The Grand Aurum & Spa - Deluxe Suite.jpg',
+      '/upload/images/hotel/The Grand Aurum & Spa - Infinity Pool.jpg'
     ],
     amenities: ['King Size Bed', 'Garden View', 'Rain Shower', 'High-Speed Wi-Fi', 'Espresso Machine', 'LED Smart TV', 'Electronic Safe'],
     availableCount: 8,
@@ -1028,8 +1029,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 8499,
     originalPrice: 11000,
     images: [
-      '/upload/images/hotel/The Grand Aurum & Spa.png',
-      '/upload/images/destination/Pune.png'
+      '/upload/images/hotel/The Grand Aurum & Spa - Deluxe Suite.jpg',
+      '/upload/images/hotel/The Grand Aurum & Spa - Fine Dining.jpg'
     ],
     amenities: ['Separate Living Parlour', 'Freestanding Soaking Tub', 'Walk-in Wardrobe', 'Balcony with Pool View', 'Complimentary Butler Service', 'Hermès Toiletries'],
     availableCount: 4,
@@ -1074,8 +1075,8 @@ export const INITIAL_ROOMS: RoomType[] = [
     basePrice: 12500,
     originalPrice: 15500,
     images: [
-      '/upload/images/hotel/The Grand Aurum & Spa.png',
-      '/upload/images/destination/Pune.png'
+      '/upload/images/hotel/The Grand Aurum & Spa - Kids Play Area.jpg',
+      '/upload/images/hotel/The Grand Aurum & Spa - Deluxe Suite.jpg'
     ],
     amenities: ['2 Master Bedrooms', 'Private Terrace Dining', 'Kitchenette', 'Dual Bathrooms', 'Kids Play Corner', 'Smart Home Controls'],
     availableCount: 3,
