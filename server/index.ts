@@ -26,6 +26,20 @@ import {
 } from './youpiGateway';
 
 const app = express();
+app.disable('x-powered-by');
+
+// Defensive Security Headers Middleware
+app.use((_request: Request, response: Response, next: NextFunction) => {
+  response.setHeader('X-Content-Type-Options', 'nosniff');
+  response.setHeader('X-Frame-Options', 'DENY');
+  response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.setHeader('X-XSS-Protection', '1; mode=block');
+  if (process.env.NODE_ENV === 'production') {
+    response.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
+
 const port = Number(process.env.PORT || 3000);
 const sessionMaxAge = 30 * 24 * 60 * 60;
 let database: Pool | null = null;
@@ -63,8 +77,16 @@ type BookingRequest = {
   paymentMethod: Booking['paymentMethod'];
 };
 
-// In-memory rate limiter for login & registration
+// In-memory rate limiter with periodic cleanup to prevent memory exhaustion
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of rateLimitMap.entries()) {
+    if (now > entry.resetAt) {
+      rateLimitMap.delete(key);
+    }
+  }
+}, 10 * 60 * 1000).unref();
 function checkRateLimit(key: string, maxAttempts = 5, windowMs = 15 * 60 * 1000): { allowed: boolean; retryAfter?: number } {
   const now = Date.now();
   const entry = rateLimitMap.get(key);
@@ -489,12 +511,13 @@ async function initializeDatabase() {
   }
 
   // 8. Seed default administrator account if missing
-  const adminEmail = 'admin@stayaura.com';
+  const adminEmail = process.env.ADMIN_INITIAL_EMAIL || 'admin@stayaura.com';
   const existingAdmin = (await query<{ id: string }>('SELECT id FROM users WHERE email = ?', [adminEmail]))[0];
   if (!existingAdmin) {
     const adminId = 'usr_admin_master';
+    const adminPassword = process.env.ADMIN_INITIAL_PASSWORD || 'Admin@StayAura2026!';
     const adminSalt = randomBytes(16).toString('hex');
-    const adminHash = passwordDigest('Admin@StayAura2026!', adminSalt);
+    const adminHash = passwordDigest(adminPassword, adminSalt);
     const adminUser: StoredUser = {
       id: adminId,
       name: 'StayAura Administrator',
@@ -656,7 +679,7 @@ const uploadStorage = multer.diskStorage({
   },
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
-    const safeExt = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'].includes(ext) ? ext : '.jpg';
+    const safeExt = ['.jpg', '.jpeg', '.png', '.webp'].includes(ext) ? ext : '.jpg';
     cb(null, `img-${Date.now()}-${randomBytes(4).toString('hex')}${safeExt}`);
   }
 });
@@ -665,11 +688,11 @@ const upload = multer({
   storage: uploadStorage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (_req, file, cb) => {
-    const allowed = /^image\/(jpeg|png|webp|gif|svg\+xml)$/i;
+    const allowed = /^image\/(jpeg|png|webp)$/i;
     if (allowed.test(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only JPEG, PNG, WebP, GIF, and SVG images are allowed.'));
+      cb(new Error('Only JPEG, PNG, and WebP images are allowed. SVG and executable files are prohibited.'));
     }
   }
 });
@@ -724,8 +747,14 @@ app.use('/api', (_request, response, next) => {
   return next();
 });
 
-// Multipart file upload endpoint
-app.post('/api/upload', (request: Request, response: Response) => {
+// Multipart file upload endpoint (Authenticated only)
+app.post('/api/upload', asyncRoute(async (request: Request, response: Response) => {
+  const user = await findUser(request);
+  const admin = await findAdmin(request);
+  if (!user && !admin) {
+    return response.status(401).json({ error: 'Authentication required to upload images.' });
+  }
+
   upload.single('image')(request, response, (err) => {
     if (err) {
       return response.status(400).json({ error: err instanceof Error ? err.message : 'Upload failed.' });
@@ -741,23 +770,28 @@ app.post('/api/upload', (request: Request, response: Response) => {
       mimetype: request.file.mimetype
     });
   });
-});
+}));
 
-// Base64 file upload endpoint
+// Base64 file upload endpoint (Authenticated only)
 app.post('/api/upload/base64', asyncRoute(async (request: Request, response: Response) => {
+  const user = await findUser(request);
+  const admin = await findAdmin(request);
+  if (!user && !admin) {
+    return response.status(401).json({ error: 'Authentication required to upload images.' });
+  }
+
   const { dataUrl } = request.body || {};
   if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
     return response.status(400).json({ error: 'Invalid image data URL provided.' });
   }
 
-  const matches = dataUrl.match(/^data:image\/([a-zA-Z0-9+.-]+);base64,(.+)$/);
+  const matches = dataUrl.match(/^data:image\/(jpeg|png|webp|jpg);base64,(.+)$/i);
   if (!matches) {
-    return response.status(400).json({ error: 'Malformed base64 image data.' });
+    return response.status(400).json({ error: 'Only JPEG, PNG, and WebP images are allowed.' });
   }
 
   let ext = matches[1].toLowerCase();
   if (ext === 'jpeg') ext = 'jpg';
-  if (ext === 'svg+xml') ext = 'svg';
   const buffer = Buffer.from(matches[2], 'base64');
   if (buffer.length > 10 * 1024 * 1024) {
     return response.status(400).json({ error: 'Image exceeds 10MB limit.' });
@@ -952,10 +986,10 @@ app.get('/api/auth/me', asyncRoute(async (request, response) => {
 app.put('/api/auth/me', asyncRoute(async (request, response) => {
   const user = await requireUser(request, response);
   if (!user) return;
-  const name = typeof request.body?.name === 'string' ? request.body.name.trim() : user.name;
-  const phone = typeof request.body?.phone === 'string' ? request.body.phone.trim() : user.phone;
-  const city = typeof request.body?.city === 'string' ? request.body.city.trim() : user.city;
-  const avatar = typeof request.body?.avatar === 'string' ? request.body.avatar.trim() : user.avatar;
+  const name = typeof request.body?.name === 'string' ? request.body.name.trim().slice(0, 100) : user.name;
+  const phone = typeof request.body?.phone === 'string' ? request.body.phone.trim().slice(0, 25) : user.phone;
+  const city = typeof request.body?.city === 'string' ? request.body.city.trim().slice(0, 100) : user.city;
+  const avatar = typeof request.body?.avatar === 'string' ? request.body.avatar.trim().slice(0, 1000) : user.avatar;
   const updated: StoredUser = { ...user, name, phone, city, ...(avatar ? { avatar } : {}) };
   await execute('UPDATE users SET data = ? WHERE id = ?', [JSON.stringify(updated), user.id]);
   return response.json({ user: updated });
@@ -1397,6 +1431,8 @@ app.get('/api/admin/stats', asyncRoute(async (request, response) => {
 
   const nonCancelled = bookings.filter((b) => b.bookingStatus !== 'Cancelled');
   const totalRevenue = nonCancelled.reduce((sum, b) => sum + (b.grandTotal || 0), 0);
+  const todayBookings = nonCancelled.filter((b) => b.checkIn === today || (b.bookedAt && b.bookedAt.startsWith(today)));
+  const calculatedTodayRevenue = todayBookings.reduce((sum, b) => sum + (b.grandTotal || 0), 0);
   const totalBookings = bookings.length;
   const activeBookings = bookings.filter((b) => b.bookingStatus === 'Confirmed' || b.bookingStatus === 'Checked In').length;
   const todayCheckIns = bookings.filter((b) => b.checkIn === today && (b.bookingStatus === 'Confirmed' || b.bookingStatus === 'Checked In')).length;
@@ -1412,7 +1448,7 @@ app.get('/api/admin/stats', asyncRoute(async (request, response) => {
 
   return response.json({
     stats: {
-      todayRevenue: Math.round(totalRevenue * 0.12),
+      todayRevenue: calculatedTodayRevenue,
       occupancyPercent: occupancyRate,
       checkInsCount: todayCheckIns,
       checkOutsCount: todayCheckOuts,
@@ -1772,7 +1808,12 @@ async function start() {
 
   if (process.env.NODE_ENV === 'production' || hasDist) {
     app.use(express.static(buildDirectory));
-    app.get('*', (_request, response) => response.sendFile(path.join(buildDirectory, 'index.html')));
+    app.get('*', (request, response, next) => {
+      if (request.path.startsWith('/api') || request.path.startsWith('/uploads')) {
+        return next();
+      }
+      return response.sendFile(path.join(buildDirectory, 'index.html'));
+    });
   } else {
     const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
     app.use(vite.middlewares);

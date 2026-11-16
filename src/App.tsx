@@ -29,8 +29,8 @@ import { CorporateStaysPage } from './pages/customer/CorporateStaysPage';
 import { GroupBookingPage } from './pages/customer/GroupBookingPage';
 
 // Admin Pages
-import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
+const AdminDashboardPage = React.lazy(() => import('./pages/admin/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
 
 // Auth hooks
 import { useAuth } from './context/AuthContext';
@@ -118,7 +118,44 @@ function AppLayout() {
 
             {/* Admin Portal */}
             <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route path="/admin" element={<AdminProtectedRoute><AdminDashboardPage /></AdminProtectedRoute>} />
+            <Route
+              path="/admin"
+              element={
+                <AdminProtectedRoute>
+                  <React.Suspense
+                    fallback={
+                      <div className="min-h-screen bg-[#11161B] flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="w-8 h-8 border-2 border-[#C5A880] border-t-transparent rounded-full animate-spin" />
+                          <p className="text-xs uppercase tracking-widest text-[#C5A880] font-semibold">Loading Admin Console...</p>
+                        </div>
+                      </div>
+                    }
+                  >
+                    <AdminDashboardPage />
+                  </React.Suspense>
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/*"
+              element={
+                <AdminProtectedRoute>
+                  <React.Suspense
+                    fallback={
+                      <div className="min-h-screen bg-[#11161B] flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="w-8 h-8 border-2 border-[#C5A880] border-t-transparent rounded-full animate-spin" />
+                          <p className="text-xs uppercase tracking-widest text-[#C5A880] font-semibold">Loading Admin Console...</p>
+                        </div>
+                      </div>
+                    }
+                  >
+                    <AdminDashboardPage />
+                  </React.Suspense>
+                </AdminProtectedRoute>
+              }
+            />
 
             {/* Fallback to home */}
             <Route path="*" element={<HomePage />} />

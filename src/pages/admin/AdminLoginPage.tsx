@@ -20,8 +20,8 @@ export function AdminLoginPage() {
   const location = useLocation();
   const { adminLogin, isAdminAuthenticated, isAdminLoading } = useAdmin();
 
-  const [email, setEmail] = useState('admin@stayaura.com');
-  const [password, setPassword] = useState('Admin@StayAura2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');

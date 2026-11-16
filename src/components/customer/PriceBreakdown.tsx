@@ -7,10 +7,10 @@ export function PriceBreakdown() {
   const [couponInput, setCouponInput] = useState('');
   const [couponFeedback, setCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
-  const handleApply = (e: React.FormEvent) => {
+  const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponInput.trim()) return;
-    const res = applyCoupon(couponInput);
+    const res = await applyCoupon(couponInput);
     setCouponFeedback(res);
   };
 

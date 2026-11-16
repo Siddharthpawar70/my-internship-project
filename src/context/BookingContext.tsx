@@ -35,7 +35,7 @@ interface BookingContextType {
   resetDraft: () => void;
   selectHotelAndRoom: (hotel: Hotel, room: RoomType, ratePlan?: RatePlan) => void;
   toggleAddOn: (addOn: AddOn, quantity?: number) => void;
-  applyCoupon: (code: string) => { success: boolean; message: string };
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
   removeCoupon: () => void;
   priceBreakdown: PriceBreakdown;
   bookings: Booking[];
@@ -171,9 +171,17 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const applyCoupon = (code: string): { success: boolean; message: string } => {
+  const applyCoupon = async (code: string): Promise<{ success: boolean; message: string }> => {
     const cleanCode = code.trim().toUpperCase();
-    const found = COUPONS_LIST.find((c) => c.code === cleanCode && c.active);
+    let found: Coupon | undefined;
+    try {
+      const res = await apiRequest<{ coupon: Coupon }>(`/coupons/${encodeURIComponent(cleanCode)}`);
+      if (res?.coupon) found = res.coupon;
+    } catch {
+      // Fallback to local list if API is unreachable
+      found = COUPONS_LIST.find((c) => c.code === cleanCode && (c.active || c.isActive));
+    }
+
     if (!found) {
       return { success: false, message: 'Invalid or expired coupon code.' };
     }
@@ -188,7 +196,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
       };
     }
 
-    setDraft((prev) => ({ ...prev, appliedCoupon: found }));
+    setDraft((prev) => ({ ...prev, appliedCoupon: found! }));
     return { success: true, message: `Coupon ${found.code} applied successfully!` };
   };
 
