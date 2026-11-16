@@ -225,14 +225,16 @@ export function Navbar() {
                       <Luggage className="w-4 h-4 text-gray-500" />
                       <span>My Bookings ({bookings.length})</span>
                     </Link>
-                    <Link
-                      to="/admin"
-                      onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-[#977341] hover:bg-[#FAF5EB] transition-colors font-semibold"
-                    >
-                      <HotelIcon className="w-4 h-4 text-[#C5A880]" />
-                      <span>Admin Console</span>
-                    </Link>
+                    {user?.role === 'admin' && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-[#977341] hover:bg-[#FAF5EB] transition-colors font-semibold"
+                      >
+                        <HotelIcon className="w-4 h-4 text-[#C5A880]" />
+                        <span>Admin Console</span>
+                      </Link>
+                    )}
                     <button
                       onClick={() => {
                         logout();

@@ -90,6 +90,18 @@ function AppLayout() {
   const isAdmin = location.pathname.startsWith('/admin');
   const { user } = useAuth();
 
+  // Hidden admin shortcut: Ctrl+Shift+A (or Cmd+Shift+A) to jump to the Admin Console
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        window.location.href = '/admin';
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <WishlistProvider userId={user?.id}>
       <div className="flex flex-col min-h-screen">

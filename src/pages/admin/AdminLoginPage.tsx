@@ -9,9 +9,7 @@ import {
   Sparkles,
   ArrowRight,
   AlertCircle,
-  Building2,
-  KeyRound,
-  CheckCircle2
+  KeyRound
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 
@@ -181,31 +179,6 @@ export function AdminLoginPage() {
               )}
             </button>
           </form>
-
-          {/* Demo Credentials Helper Card */}
-          <div className="mt-8 pt-6 border-t border-white/10 text-xs">
-            <div className="bg-white/5 rounded-2xl p-4 border border-white/5 space-y-1.5">
-              <div className="flex items-center gap-2 text-[#C5A880] font-semibold text-[11px] uppercase tracking-wider">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Pre-configured Demo Credentials</span>
-              </div>
-              <div className="font-mono text-[11px] text-gray-300 space-y-0.5">
-                <p>Email: <span className="text-white font-bold">admin@stayaura.com</span></p>
-                <p>Password: <span className="text-white font-bold">Admin@StayAura2026!</span></p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('admin@stayaura.com');
-                  setPassword('Admin@StayAura2026!');
-                  setErrorMessage('');
-                }}
-                className="mt-2 text-[11px] text-[#C5A880] hover:underline cursor-pointer flex items-center gap-1 font-semibold"
-              >
-                Auto-fill credentials
-              </button>
-            </div>
-          </div>
 
         </div>
       </main>

@@ -201,13 +201,15 @@ export function UserProfilePage() {
                 <span>Saved Wishlist Stays</span>
                 <Sparkles className="w-4 h-4 text-gray-400" />
               </Link>
-              <Link
-                to="/admin"
-                className="flex items-center justify-between p-3 rounded-xl bg-[#1E252B] hover:bg-[#2D3748] text-xs text-white font-semibold transition-colors"
-              >
-                <span>Open Hotel Admin Portal</span>
-                <Shield className="w-4 h-4 text-[#C5A880]" />
-              </Link>
+              {user?.role === 'admin' && (
+                <Link
+                  to="/admin"
+                  className="flex items-center justify-between p-3 rounded-xl bg-[#1E252B] hover:bg-[#2D3748] text-xs text-white font-semibold transition-colors"
+                >
+                  <span>Open Hotel Admin Portal</span>
+                  <Shield className="w-4 h-4 text-[#C5A880]" />
+                </Link>
+              )}
             </div>
           </div>
 

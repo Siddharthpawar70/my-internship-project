@@ -110,7 +110,6 @@ export function Footer() {
           <div>
             <h5 className="text-xs font-bold uppercase tracking-wider text-[#C5A880] mb-4">Management & Help</h5>
             <ul className="space-y-2 text-xs text-gray-400">
-              <li><Link to="/admin" className="text-[#C5A880] font-semibold hover:underline">Hotelier Admin Portal</Link></li>
               <li><Link to="/trips" className="hover:text-white transition-colors">Manage My Booking</Link></li>
               <li><Link to="/profile" className="hover:text-white transition-colors">StayAura Loyalty Club</Link></li>
               <li><Link to="/wishlist" className="hover:text-white transition-colors">Saved Wishlist</Link></li>
@@ -128,8 +127,6 @@ export function Footer() {
             <span className="text-gray-400">INR (₹) Indian Rupee</span>
             <span>•</span>
             <span className="text-gray-400">English (India)</span>
-            <span>•</span>
-            <Link to="/admin" className="text-[#C5A880] hover:underline">Admin Console</Link>
           </div>
         </div>
 
