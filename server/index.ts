@@ -28,6 +28,30 @@ import {
 const app = express();
 app.disable('x-powered-by');
 
+// ── CORS ────────────────────────────────────────────────────────────────────
+// Allow requests from the Vercel frontend (and localhost in dev).
+const ALLOWED_ORIGINS = new Set([
+  'http://localhost:3000',
+  'http://localhost:5173',
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+]);
+
+app.use((request: Request, response: Response, next: NextFunction) => {
+  const origin = request.headers.origin ?? '';
+  if (ALLOWED_ORIGINS.has(origin)) {
+    response.setHeader('Access-Control-Allow-Origin', origin);
+    response.setHeader('Access-Control-Allow-Credentials', 'true');
+    response.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With');
+    response.setHeader('Vary', 'Origin');
+  }
+  if (request.method === 'OPTIONS') {
+    response.sendStatus(204);
+    return;
+  }
+  next();
+});
+
 // Defensive Security Headers Middleware
 app.use((_request: Request, response: Response, next: NextFunction) => {
   response.setHeader('X-Content-Type-Options', 'nosniff');
@@ -46,6 +70,11 @@ let database: Pool | null = null;
 let sqliteDb: DatabaseSync | null = null;
 let storageType: 'mysql' | 'sqlite' = 'sqlite';
 let databaseUnavailable = false;
+
+// ── Health check (used by Render) ───────────────────────────────────────────
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.json({ status: 'ok', storage: storageType, ts: Date.now() });
+});
 
 type StoredUser = {
   id: string;

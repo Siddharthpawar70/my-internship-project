@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+// API Base URL - supports optional VITE_API_URL env variable for split hosting (e.g., Vercel + Render)
+const RAW_API_URL = import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).replace(/\/$/, '') : '';
+const API_BASE = RAW_API_URL ? `${RAW_API_URL}/api` : '/api';
 
 export async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {

@@ -193,6 +193,17 @@ export function AdminLoginPage() {
                 <p>Email: <span className="text-white font-bold">admin@stayaura.com</span></p>
                 <p>Password: <span className="text-white font-bold">Admin@StayAura2026!</span></p>
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('admin@stayaura.com');
+                  setPassword('Admin@StayAura2026!');
+                  setErrorMessage('');
+                }}
+                className="mt-2 text-[11px] text-[#C5A880] hover:underline cursor-pointer flex items-center gap-1 font-semibold"
+              >
+                Auto-fill credentials
+              </button>
             </div>
           </div>
 

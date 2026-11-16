@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: stayaura-api
+    runtime: node
+    region: singapore   # closest free-tier region to India
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Set these in the Render dashboard (Settings → Environment):
+      # ADMIN_INITIAL_EMAIL    – your admin login email
+      # ADMIN_INITIAL_PASSWORD – your admin login password (min 12 chars)
+      # Optional MySQL (leave unset to use SQLite):
+      # MYSQL_HOST / MYSQL_PORT / MYSQL_USER / MYSQL_PASSWORD / MYSQL_DATABASE
+      # Payment gateway (optional):
+      # YOUPI_MERCHANT_ID / YOUPI_API_KEY / YOUPI_WEBHOOK_SECRET
