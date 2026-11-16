@@ -268,3 +268,32 @@ export interface GroupQuoteRequest {
   totalQuote?: number;
   status: 'Pending Quote' | 'Quote Sent' | 'Accepted' | 'Declined';
 }
+
+export interface AdminSettings {
+  hotelName: string;
+  tagline: string;
+  supportEmail: string;
+  supportPhone: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  currency: string;
+  currencySymbol: string;
+  timezone: string;
+  checkInTime: string;
+  checkOutTime: string;
+  cancellationWindowHours: number;
+  gstRatePercent: number;
+  serviceChargePercent: number;
+  autoApproveBookings: boolean;
+  enableUpiPayment: boolean;
+  enablePayAtHotel: boolean;
+  enableCardPayment: boolean;
+  youpiMerchantId: string;
+  youpiApiUrl: string;
+  youpiCheckoutUrl: string;
+  youpiWebhookSecret: string;
+  allowGuestReviews: boolean;
+  adminNotificationEmail: string;
+}

@@ -235,6 +235,17 @@ export function Navbar() {
                         <span>Admin Console</span>
                       </Link>
                     )}
+                    {/* Show Admin Console link to everyone as direct URL access */}
+                    {!user?.role || user?.role === 'customer' ? (
+                      <Link
+                        to="/admin/login"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-gray-500 hover:bg-gray-50 transition-colors"
+                      >
+                        <HotelIcon className="w-4 h-4 text-gray-400" />
+                        <span>Hotel Admin Portal</span>
+                      </Link>
+                    ) : null}
                     <button
                       onClick={() => {
                         logout();

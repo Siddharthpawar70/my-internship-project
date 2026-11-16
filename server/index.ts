@@ -383,7 +383,8 @@ async function initializeDatabase() {
           event_type VARCHAR(50) NOT NULL,
           payment_id VARCHAR(100),
           processed_at VARCHAR(50) NOT NULL
-        ) ENGINE=InnoDB`
+        ) ENGINE=InnoDB`,
+        'CREATE TABLE IF NOT EXISTS settings (key_name VARCHAR(100) PRIMARY KEY, data LONGTEXT NOT NULL) ENGINE=InnoDB'
       ];
       for (const statement of schemaStatements) await pool.query(statement);
       console.log(`Connected to MySQL database "${MYSQL_DATABASE}".`);
@@ -484,7 +485,8 @@ async function initializeDatabase() {
         event_type TEXT NOT NULL,
         payment_id TEXT,
         processed_at TEXT NOT NULL
-      )`
+      )`,
+      'CREATE TABLE IF NOT EXISTS settings (key_name TEXT PRIMARY KEY, data TEXT NOT NULL)'
     ];
     for (const statement of sqliteSchema) sqliteDb.exec(statement);
     console.log('Using local SQLite database at .data/hotelbooking.sqlite');
@@ -1814,6 +1816,54 @@ app.patch('/api/admin/hotels/:id', asyncRoute(async (request, response) => {
   if (Array.isArray(amenities)) hotel.amenities = amenities.map(String);
   await execute('UPDATE hotels SET data = ? WHERE id = ?', [JSON.stringify(hotel), id]);
   return response.json({ hotel });
+}));
+
+// Admin: System Settings
+const DEFAULT_SETTINGS = {
+  hotelName: 'StayAura Hotel',
+  tagline: 'Where Luxury Meets Comfort',
+  supportEmail: 'support@stayaura.com',
+  supportPhone: '+91 98765 43210',
+  city: 'Pune',
+  state: 'Maharashtra',
+  country: 'India',
+  pincode: '411001',
+  currency: 'INR',
+  currencySymbol: '₹',
+  timezone: 'Asia/Kolkata',
+  checkInTime: '14:00',
+  checkOutTime: '11:00',
+  cancellationWindowHours: 24,
+  gstRatePercent: 18,
+  serviceChargePercent: 0,
+  autoApproveBookings: true,
+  enableUpiPayment: true,
+  enablePayAtHotel: true,
+  enableCardPayment: false,
+  youpiMerchantId: process.env.YOUPI_PG_MERCHANT_ID || '00000000-0000-0000-0000-000000000001',
+  youpiApiUrl: process.env.YOUPI_PG_API_URL || 'http://localhost:6100',
+  youpiCheckoutUrl: process.env.YOUPI_PG_CHECKOUT_URL || 'http://localhost:7000',
+  youpiWebhookSecret: process.env.YOUPI_PG_WEBHOOK_SECRET || '',
+  allowGuestReviews: true,
+  adminNotificationEmail: process.env.ADMIN_INITIAL_EMAIL || 'admin@stayaura.com'
+};
+
+app.get('/api/admin/settings', asyncRoute(async (request, response) => {
+  const admin = await requireAdmin(request, response);
+  if (!admin) return;
+  const row = (await query<{ data: string }>('SELECT data FROM settings WHERE key_name = ?', ['system']))[0];
+  const settings = row ? { ...DEFAULT_SETTINGS, ...JSON.parse(row.data) } : DEFAULT_SETTINGS;
+  return response.json({ settings });
+}));
+
+app.patch('/api/admin/settings', asyncRoute(async (request, response) => {
+  const admin = await requireAdmin(request, response);
+  if (!admin) return;
+  const row = (await query<{ data: string }>('SELECT data FROM settings WHERE key_name = ?', ['system']))[0];
+  const existing = row ? JSON.parse(row.data) : {};
+  const updated = { ...DEFAULT_SETTINGS, ...existing, ...request.body };
+  await upsertRecord('settings', 'key_name', 'system', updated);
+  return response.json({ settings: updated });
 }));
 
 // Public: Validate coupon code

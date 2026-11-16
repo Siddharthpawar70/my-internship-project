@@ -35,12 +35,17 @@ import {
   Image as ImageIcon,
   UploadCloud,
   Copy,
-  Check
+  Check,
+  Settings,
+  Save,
+  Percent,
+  CreditCard,
+  Bell
 } from 'lucide-react';
 import { useAdmin, AdminRoomItem, AdminMaintenanceItem, AdminUser } from '../../context/AdminContext';
 import { apiRequest, uploadImage } from '../../lib/api';
 import { StatusBadge } from '../../components/common/StatusBadge';
-import { Coupon, Booking, Review } from '../../types';
+import { Coupon, Booking, Review, AdminSettings } from '../../types';
 
 export function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -67,14 +72,38 @@ export function AdminDashboardPage() {
     updateUserStatus,
     adminReviews,
     deleteReview,
-    refreshData
+    refreshData,
+    adminSettings,
+    settingsLoading,
+    updateAdminSettings
   } = useAdmin();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'inventory' | 'maintenance' | 'coupons' | 'users' | 'reviews' | 'media'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'inventory' | 'maintenance' | 'coupons' | 'users' | 'reviews' | 'media' | 'settings'>('overview');
   const [bookingFilter, setBookingFilter] = useState('All');
   const [bookingSearch, setBookingSearch] = useState('');
   const [paymentFilter, setPaymentFilter] = useState('All');
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // System Settings state
+  const [settingsForm, setSettingsForm] = useState<Partial<AdminSettings>>({});
+  const [settingsSaved, setSettingsSaved] = useState(false);
+
+  React.useEffect(() => {
+    if (adminSettings) {
+      setSettingsForm(adminSettings);
+    }
+  }, [adminSettings]);
+
+  const handleSettingChange = (field: keyof AdminSettings, value: any) => {
+    setSettingsForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await updateAdminSettings(settingsForm);
+    setSettingsSaved(true);
+    setTimeout(() => setSettingsSaved(false), 3000);
+  };
 
   // Media state
   const [uploadedMedia, setUploadedMedia] = useState<{ filename: string; url: string; size: number; createdAt: string }[]>([]);
@@ -227,7 +256,8 @@ export function AdminDashboardPage() {
               { id: 'coupons', label: 'Coupons & Promos', icon: Tag, badge: coupons.length },
               { id: 'users', label: 'User Approval', icon: Users, badge: registeredUsers.filter((u) => u.status === 'pending').length || undefined },
               { id: 'reviews', label: 'Guest Reviews', icon: Star, badge: adminReviews.length },
-              { id: 'media', label: 'Media & Uploads', icon: ImageIcon }
+              { id: 'media', label: 'Media & Uploads', icon: ImageIcon },
+              { id: 'settings', label: 'System Settings', icon: Settings }
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -329,7 +359,7 @@ export function AdminDashboardPage() {
 
         {/* Mobile Tab Switcher */}
         <div className="md:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-6">
-          {['overview', 'bookings', 'inventory', 'maintenance', 'coupons', 'users', 'reviews', 'media'].map((tab) => (
+          {['overview', 'bookings', 'inventory', 'maintenance', 'coupons', 'users', 'reviews', 'media', 'settings'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
@@ -365,7 +395,7 @@ export function AdminDashboardPage() {
                   <DollarSign className="w-4 h-4 text-emerald-600" />
                 </div>
                 <p className="text-2xl font-bold text-gray-900">
-                  â‚¹{analytics.totalRevenue.toLocaleString('en-IN')}
+                  ₹{analytics.totalRevenue.toLocaleString('en-IN')}
                 </p>
                 <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold mt-2">
                   <TrendingUp className="w-3.5 h-3.5" />
@@ -429,12 +459,12 @@ export function AdminDashboardPage() {
               {/* Bar Visualizer */}
               <div className="grid grid-cols-6 gap-3 sm:gap-6 items-end h-48 pt-6 border-b border-gray-100">
                 {[
-                  { month: 'Apr', val: 65, rev: 'â‚¹14.2L' },
-                  { month: 'May', val: 72, rev: 'â‚¹18.5L' },
-                  { month: 'Jun', val: 80, rev: 'â‚¹22.1L' },
-                  { month: 'Jul', val: 84, rev: 'â‚¹25.8L' },
-                  { month: 'Aug', val: 88, rev: 'â‚¹28.4L' },
-                  { month: 'Oct (Now)', val: 92, rev: `â‚¹${Math.round(analytics.totalRevenue / 100000)}L` }
+                  { month: 'Apr', val: 65, rev: '₹14.2L' },
+                  { month: 'May', val: 72, rev: '₹18.5L' },
+                  { month: 'Jun', val: 80, rev: '₹22.1L' },
+                  { month: 'Jul', val: 84, rev: '₹25.8L' },
+                  { month: 'Aug', val: 88, rev: '₹28.4L' },
+                  { month: 'Oct (Now)', val: 92, rev: `₹${Math.round(analytics.totalRevenue / 100000)}L` }
                 ].map((item) => (
                   <div key={item.month} className="flex flex-col items-center gap-2 h-full justify-end group">
                     <span className="text-[10px] font-bold text-gray-500 group-hover:text-gray-900 transition-colors">
@@ -497,10 +527,10 @@ export function AdminDashboardPage() {
                           <p className="text-[10px] text-gray-500">{b.roomName}</p>
                         </td>
                         <td className="py-3.5 text-gray-600">
-                          {b.checkIn} â†’ {b.checkOut}
+                          {b.checkIn} → {b.checkOut}
                         </td>
                         <td className="py-3.5 font-bold text-gray-900">
-                          â‚¹{b.grandTotal.toLocaleString('en-IN')}
+                          ₹{b.grandTotal.toLocaleString('en-IN')}
                         </td>
                         <td className="py-3.5">
                           <StatusBadge status={b.bookingStatus} size="sm" />
@@ -566,11 +596,11 @@ export function AdminDashboardPage() {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 whitespace-nowrap shrink-0">Payment:</span>
                 {[
                   { label: 'All', value: 'All' },
-                  { label: 'âœ“ UPI Reconciled', value: 'UPI-Reconciled' },
-                  { label: 'â³ UPI Pending', value: 'UPI-Pending' },
-                  { label: 'âš  Manual Review', value: 'UPI-Review' },
-                  { label: 'ðŸ¨ Pay at Hotel', value: 'Pay at Hotel' },
-                  { label: 'âœ— Failed/Expired', value: 'Failed' },
+                  { label: '✓ UPI Reconciled', value: 'UPI-Reconciled' },
+                  { label: ' UPI Pending', value: 'UPI-Pending' },
+                  { label: '⚠️ Manual Review', value: 'UPI-Review' },
+                  { label: '🏨 Pay at Hotel', value: 'Pay at Hotel' },
+                  { label: '✗ Failed/Expired', value: 'Failed' },
                 ].map(({ label, value }) => (
                   <button
                     key={value}
@@ -636,7 +666,7 @@ export function AdminDashboardPage() {
                             <p className="text-[11px] text-gray-500">{b.roomName}</p>
                           </td>
                           <td className="py-3.5 px-4 text-gray-600">
-                            <p className="font-semibold text-gray-800">{b.checkIn} â†’ {b.checkOut}</p>
+                            <p className="font-semibold text-gray-800">{b.checkIn} → {b.checkOut}</p>
                             <p className="text-[10px] text-gray-400">{b.nights} nights ({b.adultsCount} adults)</p>
                           </td>
                           <td className="py-3.5 px-4 font-bold text-[#977341]">
@@ -658,10 +688,10 @@ export function AdminDashboardPage() {
                             )}
                           </td>
                           <td className="py-3.5 px-4">
-                            <p className="font-bold text-gray-900">â‚¹{b.grandTotal.toLocaleString('en-IN')}</p>
+                            <p className="font-bold text-gray-900">₹{b.grandTotal.toLocaleString('en-IN')}</p>
                             {/* Payment method label */}
                             <p className="text-[10px] text-gray-500 font-medium">
-                              {b.paymentMethod === 'UPI' ? 'âš¡ UPI' : b.paymentMethod === 'Pay at Hotel' ? 'ðŸ¨ Pay at Hotel' : b.paymentMethod || 'â€”'}
+                              {b.paymentMethod === 'UPI' ? '⚡ UPI' : b.paymentMethod === 'Pay at Hotel' ? '🏨 Pay at Hotel' : b.paymentMethod || '—'}
                             </p>
                             {/* Payment status badge */}
                             <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide ${
@@ -677,7 +707,7 @@ export function AdminDashboardPage() {
                             }`}>
                               {b.paymentStatus}
                             </span>
-                            {/* Settlement status â€” only show for UPI */}
+                            {/* Settlement status — only show for UPI */}
                             {b.paymentMethod === 'UPI' && b.settlementStatus && (
                               <p className={`text-[9px] font-mono mt-0.5 ${
                                 b.settlementStatus === 'RECONCILED'
@@ -686,19 +716,19 @@ export function AdminDashboardPage() {
                                   ? 'text-orange-600 font-bold'
                                   : 'text-gray-400'
                               }`}>
-                                {b.settlementStatus === 'RECONCILED' ? 'âœ“ Reconciled' : b.settlementStatus}
+                                {b.settlementStatus === 'RECONCILED' ? '✓ Reconciled' : b.settlementStatus}
                               </p>
                             )}
                             {/* UTR when available */}
                             {b.utr && (
                               <p className="text-[9px] text-gray-400 font-mono" title={`UTR: ${b.utr}`}>
-                                UTR: {b.utr.length > 14 ? b.utr.slice(0, 14) + 'â€¦' : b.utr}
+                                UTR: {b.utr.length > 14 ? b.utr.slice(0, 14) + '…' : b.utr}
                               </p>
                             )}
                             {/* Gateway payment ID */}
                             {b.gatewayPaymentId && (
                               <p className="text-[9px] text-gray-300 font-mono truncate max-w-[110px]" title={b.gatewayPaymentId}>
-                                GW: {b.gatewayPaymentId.slice(0, 8)}â€¦
+                                GW: {b.gatewayPaymentId.slice(0, 8)}…
                               </p>
                             )}
                           </td>
@@ -790,7 +820,7 @@ export function AdminDashboardPage() {
                       <div>
                         <span className="text-[10px] text-gray-400 font-bold block uppercase">Price / Night</span>
                         <span className="text-lg font-bold text-gray-900">
-                          â‚¹{item.pricePerNight.toLocaleString('en-IN')}
+                          ₹{item.pricePerNight.toLocaleString('en-IN')}
                         </span>
                       </div>
 
@@ -955,13 +985,13 @@ export function AdminDashboardPage() {
                     </div>
 
                     <h4 className="font-bold text-sm text-gray-800">
-                      {c.discountPercent ? `${c.discountPercent}% Off` : `â‚¹${c.discountValue} Off`}
+                      {c.discountPercent ? `${c.discountPercent}% Off` : `₹${c.discountValue} Off`}
                     </h4>
                     <p className="text-xs text-gray-500 mt-1 leading-relaxed">{c.description}</p>
 
                     <div className="mt-4 pt-3 border-t border-gray-100 text-[11px] text-gray-400 space-y-1">
-                      <p>Min Spend: â‚¹{(c.minSpend || c.minBookingValue || 0).toLocaleString('en-IN')}</p>
-                      <p>Max Discount: â‚¹{(c.maxDiscount || 0).toLocaleString('en-IN')}</p>
+                      <p>Min Spend: ₹{(c.minSpend || c.minBookingValue || 0).toLocaleString('en-IN')}</p>
+                      <p>Max Discount: ₹{(c.maxDiscount || 0).toLocaleString('en-IN')}</p>
                       <p>Valid Until: {c.validUntil}</p>
                     </div>
                   </div>
@@ -1048,7 +1078,7 @@ export function AdminDashboardPage() {
                         registeredUsers.map((u: AdminUser) => (
                           <tr key={u.id} className="hover:bg-gray-50/70 transition-colors">
                             <td className="py-3.5 px-4 font-mono text-[10px] text-gray-500 max-w-[100px] truncate">
-                              {u.id.slice(0, 16)}â€¦
+                              {u.id.slice(0, 16)}…
                             </td>
                             <td className="py-3.5 px-4 font-bold text-gray-900">{u.name}</td>
                             <td className="py-3.5 px-4 text-gray-600">{u.email}</td>
@@ -1057,7 +1087,7 @@ export function AdminDashboardPage() {
                                 {u.role === 'admin' ? 'Admin' : 'Customer'}
                               </span>
                             </td>
-                            <td className="py-3.5 px-4 text-gray-500">{u.registeredAt || 'â€”'}</td>
+                            <td className="py-3.5 px-4 text-gray-500">{u.registeredAt || '—'}</td>
                             <td className="py-3.5 px-4 text-gray-500">{u.lastLogin || '—'}</td>
                             <td className="py-3.5 px-4">
                               <span
@@ -1153,7 +1183,7 @@ export function AdminDashboardPage() {
                       <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
                         <div>
                           <span className="font-semibold text-gray-800">{rev.guestName || rev.userName || 'Verified Guest'}</span>
-                          <span className="text-gray-400"> â€¢ {rev.guestCity || rev.userLocation || 'India'}</span>
+                          <span className="text-gray-400"> • {rev.guestCity || rev.userLocation || 'India'}</span>
                         </div>
                         <span className="text-[10px] px-2 py-0.5 rounded bg-gray-100 text-gray-600">{rev.roomType || 'Deluxe'}</span>
                       </div>
@@ -1274,6 +1304,459 @@ export function AdminDashboardPage() {
               </div>
             )}
           </div>
+        )}
+
+        {/* 9. SYSTEM SETTINGS TAB */}
+        {activeTab === 'settings' && (
+          <form onSubmit={handleSaveSettings} className="space-y-8 animate-in fade-in duration-200">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#C5A880]">
+                  System & Hotel Configuration
+                </span>
+                <h1 className="font-display text-3xl font-bold text-gray-900 mt-0.5">
+                  Property Operations & Settings
+                </h1>
+                <p className="text-xs text-gray-500 mt-1">
+                  Manage core hotel profile, reservation rules, taxes, payment gateways, and system notifications.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {settingsSaved && (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Settings Saved!
+                  </span>
+                )}
+                <button
+                  type="submit"
+                  disabled={settingsLoading}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1E252B] text-white text-xs font-bold hover:bg-[#2D3748] transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+                >
+                  <Save className="w-4 h-4 text-[#C5A880]" />
+                  <span>{settingsLoading ? 'Saving...' : 'Save All Settings'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Section 1: Property Profile & Location */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#EAE6DF] shadow-xs space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                <div className="p-2.5 rounded-2xl bg-amber-50 text-[#C5A880]">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-display text-lg font-bold text-gray-900">Property Details & Contact</h2>
+                  <p className="text-xs text-gray-400">Hotel brand name, contact channels, and physical location coordinates</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Hotel Brand Name</label>
+                  <input
+                    type="text"
+                    value={settingsForm.hotelName || ''}
+                    onChange={(e) => handleSettingChange('hotelName', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="StayAura Grand Luxury Hotel"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Tagline / Motto</label>
+                  <input
+                    type="text"
+                    value={settingsForm.tagline || ''}
+                    onChange={(e) => handleSettingChange('tagline', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="Luxury Living, Elevated Experiences"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Support Email</label>
+                  <input
+                    type="email"
+                    value={settingsForm.supportEmail || ''}
+                    onChange={(e) => handleSettingChange('supportEmail', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="concierge@stayaura.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Support Phone / Front Desk</label>
+                  <input
+                    type="text"
+                    value={settingsForm.supportPhone || ''}
+                    onChange={(e) => handleSettingChange('supportPhone', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="+91 98765 43210"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">City</label>
+                  <input
+                    type="text"
+                    value={settingsForm.city || ''}
+                    onChange={(e) => handleSettingChange('city', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="Udaipur"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">State / Province</label>
+                  <input
+                    type="text"
+                    value={settingsForm.state || ''}
+                    onChange={(e) => handleSettingChange('state', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="Rajasthan"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Country</label>
+                  <input
+                    type="text"
+                    value={settingsForm.country || ''}
+                    onChange={(e) => handleSettingChange('country', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="India"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Postal / Pincode</label>
+                  <input
+                    type="text"
+                    value={settingsForm.pincode || ''}
+                    onChange={(e) => handleSettingChange('pincode', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="313001"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Operations, Stay Policies & Automation */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#EAE6DF] shadow-xs space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                <div className="p-2.5 rounded-2xl bg-blue-50 text-blue-600">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-display text-lg font-bold text-gray-900">Operations & Stay Policies</h2>
+                  <p className="text-xs text-gray-400">Timings, cancellation windows, review permissions, and booking approvals</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Standard Check-In Time</label>
+                  <input
+                    type="text"
+                    value={settingsForm.checkInTime || ''}
+                    onChange={(e) => handleSettingChange('checkInTime', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="14:00"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">24-hour format (e.g. 14:00)</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Standard Check-Out Time</label>
+                  <input
+                    type="text"
+                    value={settingsForm.checkOutTime || ''}
+                    onChange={(e) => handleSettingChange('checkOutTime', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="11:00"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">24-hour format (e.g. 11:00)</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Free Cancellation Window (Hours)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={settingsForm.cancellationWindowHours ?? 24}
+                    onChange={(e) => handleSettingChange('cancellationWindowHours', parseInt(e.target.value) || 0)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="24"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">Hours before check-in guests can cancel free</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <label className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 hover:border-[#C5A880] transition-colors cursor-pointer">
+                  <div>
+                    <p className="text-xs font-bold text-gray-900">Auto-Approve Online Bookings</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5">Immediately confirm bookings once payment succeeds</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={!!settingsForm.autoApproveBookings}
+                    onChange={(e) => handleSettingChange('autoApproveBookings', e.target.checked)}
+                    className="w-4 h-4 rounded text-[#C5A880] focus:ring-[#C5A880] cursor-pointer"
+                  />
+                </label>
+
+                <label className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 hover:border-[#C5A880] transition-colors cursor-pointer">
+                  <div>
+                    <p className="text-xs font-bold text-gray-900">Allow Guest Reviews & Ratings</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5">Let verified guests post reviews on room details pages</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={!!settingsForm.allowGuestReviews}
+                    onChange={(e) => handleSettingChange('allowGuestReviews', e.target.checked)}
+                    className="w-4 h-4 rounded text-[#C5A880] focus:ring-[#C5A880] cursor-pointer"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Section 3: Financials, Currency & Tax Rates */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#EAE6DF] shadow-xs space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                <div className="p-2.5 rounded-2xl bg-emerald-50 text-emerald-600">
+                  <Percent className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-display text-lg font-bold text-gray-900">Financials, Currency & Taxes</h2>
+                  <p className="text-xs text-gray-400">Configure base currency, GST / VAT rates, service charges, and timezone</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Currency Code</label>
+                  <input
+                    type="text"
+                    value={settingsForm.currency || 'INR'}
+                    onChange={(e) => handleSettingChange('currency', e.target.value.toUpperCase())}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="INR"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Currency Symbol</label>
+                  <input
+                    type="text"
+                    value={settingsForm.currencySymbol || '₹'}
+                    onChange={(e) => handleSettingChange('currencySymbol', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="₹"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">System Timezone</label>
+                  <input
+                    type="text"
+                    value={settingsForm.timezone || 'Asia/Kolkata'}
+                    onChange={(e) => handleSettingChange('timezone', e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="Asia/Kolkata"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Goods & Services Tax (GST) Rate %</label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={0.1}
+                    value={settingsForm.gstRatePercent ?? 18}
+                    onChange={(e) => handleSettingChange('gstRatePercent', parseFloat(e.target.value) || 0)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="18"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">Default hospitality GST slab (typically 12% or 18%)</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Service Charge Rate %</label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={0.1}
+                    value={settingsForm.serviceChargePercent ?? 0}
+                    onChange={(e) => handleSettingChange('serviceChargePercent', parseFloat(e.target.value) || 0)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                    placeholder="0"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">Optional property service levy (leave 0 if not applied)</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 4: Payment Methods & Gateway Configuration */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#EAE6DF] shadow-xs space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                <div className="p-2.5 rounded-2xl bg-purple-50 text-purple-600">
+                  <CreditCard className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-display text-lg font-bold text-gray-900">Payment Gateway & Methods</h2>
+                  <p className="text-xs text-gray-400">Toggle accepted customer payment channels and Youpi PG merchant credentials</p>
+                </div>
+              </div>
+
+              {/* Payment Methods Available to Guests */}
+              <div>
+                <p className="text-xs font-bold text-gray-700 mb-3">Customer Payment Options</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <label className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 hover:border-[#C5A880] transition-colors cursor-pointer">
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">Instant UPI Payment</p>
+                      <p className="text-[11px] text-gray-500 mt-0.5">GPay, PhonePe, Paytm, QR</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={!!settingsForm.enableUpiPayment}
+                      onChange={(e) => handleSettingChange('enableUpiPayment', e.target.checked)}
+                      className="w-4 h-4 rounded text-[#C5A880] focus:ring-[#C5A880] cursor-pointer"
+                    />
+                  </label>
+
+                  <label className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 hover:border-[#C5A880] transition-colors cursor-pointer">
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">Credit / Debit Card</p>
+                      <p className="text-[11px] text-gray-500 mt-0.5">Visa, Mastercard, RuPay</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={!!settingsForm.enableCardPayment}
+                      onChange={(e) => handleSettingChange('enableCardPayment', e.target.checked)}
+                      className="w-4 h-4 rounded text-[#C5A880] focus:ring-[#C5A880] cursor-pointer"
+                    />
+                  </label>
+
+                  <label className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 hover:border-[#C5A880] transition-colors cursor-pointer">
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">Pay at Hotel</p>
+                      <p className="text-[11px] text-gray-500 mt-0.5">Settle during check-in</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={!!settingsForm.enablePayAtHotel}
+                      onChange={(e) => handleSettingChange('enablePayAtHotel', e.target.checked)}
+                      className="w-4 h-4 rounded text-[#C5A880] focus:ring-[#C5A880] cursor-pointer"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Gateway API Credentials */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-xs font-bold text-gray-700 mb-3">Youpi Payment Gateway API Keys</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1.5">Youpi Merchant ID</label>
+                    <input
+                      type="text"
+                      value={settingsForm.youpiMerchantId || ''}
+                      onChange={(e) => handleSettingChange('youpiMerchantId', e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-mono font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                      placeholder="YOUPI_DEMO_MERCHANT"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1.5">Youpi Webhook Secret</label>
+                    <input
+                      type="password"
+                      value={settingsForm.youpiWebhookSecret || ''}
+                      onChange={(e) => handleSettingChange('youpiWebhookSecret', e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-mono font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                      placeholder="••••••••••••••••••••••••"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1.5">API Endpoint URL</label>
+                    <input
+                      type="text"
+                      value={settingsForm.youpiApiUrl || ''}
+                      onChange={(e) => handleSettingChange('youpiApiUrl', e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-mono font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                      placeholder="https://api.youpi.demo/v1"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1.5">Hosted Checkout URL</label>
+                    <input
+                      type="text"
+                      value={settingsForm.youpiCheckoutUrl || ''}
+                      onChange={(e) => handleSettingChange('youpiCheckoutUrl', e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-mono font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                      placeholder="https://checkout.youpi.demo"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 5: Administration & Notifications */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#EAE6DF] shadow-xs space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600">
+                  <Bell className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-display text-lg font-bold text-gray-900">Alerts & System Notifications</h2>
+                  <p className="text-xs text-gray-400">Configure recipient mailbox for booking alerts, maintenance, and cancellations</p>
+                </div>
+              </div>
+
+              <div className="max-w-md">
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">Admin Notification Email</label>
+                <input
+                  type="email"
+                  value={settingsForm.adminNotificationEmail || ''}
+                  onChange={(e) => handleSettingChange('adminNotificationEmail', e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
+                  placeholder="alerts@stayaura.com"
+                />
+                <p className="text-[11px] text-gray-400 mt-1">All new booking receipts and urgent housekeeping flags will be copied here.</p>
+              </div>
+            </div>
+
+            {/* Save Button Row */}
+            <div className="flex items-center justify-between pt-4 pb-8">
+              <p className="text-xs text-gray-400">
+                Changes apply immediately across all booking calculation engines and guest portals.
+              </p>
+              <div className="flex items-center gap-3">
+                {settingsSaved && (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Settings Saved!
+                  </span>
+                )}
+                <button
+                  type="submit"
+                  disabled={settingsLoading}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1E252B] text-white text-xs font-bold hover:bg-[#2D3748] transition-colors shadow-md cursor-pointer disabled:opacity-50"
+                >
+                  <Save className="w-4 h-4 text-[#C5A880]" />
+                  <span>{settingsLoading ? 'Saving Settings...' : 'Save All Settings'}</span>
+                </button>
+              </div>
+            </div>
+          </form>
         )}
 
       </main>
@@ -1405,7 +1888,7 @@ export function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">Max Discount (â‚¹)</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Max Discount (₹)</label>
                   <input
                     type="number"
                     step={100}
@@ -1417,7 +1900,7 @@ export function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">Min Spend Required (â‚¹)</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1">Min Spend Required (₹)</label>
                 <input
                   type="number"
                   step={500}

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { Hotel, RoomType, HousekeepingRoom, MaintenanceTicket, Coupon, GroupQuoteRequest, Booking, Review } from '../types';
+import { Hotel, RoomType, HousekeepingRoom, MaintenanceTicket, Coupon, GroupQuoteRequest, Booking, Review, AdminSettings } from '../types';
 import { INITIAL_HOTELS, INITIAL_ROOMS, INITIAL_HOUSEKEEPING, INITIAL_MAINTENANCE, COUPONS_LIST, INITIAL_GROUP_QUOTES, INITIAL_BOOKINGS } from '../data/mockData';
 import { apiRequest } from '../lib/api';
 import { UserProfile } from './AuthContext';
@@ -114,6 +114,11 @@ interface AdminContextType {
   stats: AdminStats;
   analytics: AdminAnalytics;
   refreshData: () => Promise<void>;
+
+  // System Settings
+  adminSettings: AdminSettings;
+  settingsLoading: boolean;
+  updateAdminSettings: (updates: Partial<AdminSettings>) => Promise<void>;
 }
 
 const defaultStats: AdminStats = {
@@ -214,6 +219,37 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [roomAvailabilityOverrides, setRoomAvailabilityOverrides] = useState<Record<string, boolean>>({});
   const [roomPriceOverrides, setRoomPriceOverrides] = useState<Record<string, number>>({});
 
+  const DEFAULT_ADMIN_SETTINGS: AdminSettings = {
+    hotelName: 'StayAura Hotel',
+    tagline: 'Where Luxury Meets Comfort',
+    supportEmail: 'support@stayaura.com',
+    supportPhone: '+91 98765 43210',
+    city: 'Pune',
+    state: 'Maharashtra',
+    country: 'India',
+    pincode: '411001',
+    currency: 'INR',
+    currencySymbol: '₹',
+    timezone: 'Asia/Kolkata',
+    checkInTime: '14:00',
+    checkOutTime: '11:00',
+    cancellationWindowHours: 24,
+    gstRatePercent: 18,
+    serviceChargePercent: 0,
+    autoApproveBookings: true,
+    enableUpiPayment: true,
+    enablePayAtHotel: true,
+    enableCardPayment: false,
+    youpiMerchantId: '00000000-0000-0000-0000-000000000001',
+    youpiApiUrl: 'http://localhost:6100',
+    youpiCheckoutUrl: 'http://localhost:7000',
+    youpiWebhookSecret: '',
+    allowGuestReviews: true,
+    adminNotificationEmail: 'admin@stayaura.com'
+  };
+  const [adminSettings, setAdminSettings] = useState<AdminSettings>(DEFAULT_ADMIN_SETTINGS);
+  const [settingsLoading, setSettingsLoading] = useState(false);
+
   // Verify admin session on mount
   useEffect(() => {
     apiRequest<{ admin: UserProfile | null }>('/admin/auth/me')
@@ -298,6 +334,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       const revRes = await apiRequest<{ reviews: Review[] }>('/admin/reviews').catch(() => null);
       if (revRes?.reviews) {
         setAdminReviews(revRes.reviews);
+      }
+
+      // 9. Fetch settings
+      const settingsRes = await apiRequest<{ settings: AdminSettings }>('/admin/settings').catch(() => null);
+      if (settingsRes?.settings) {
+        setAdminSettings(settingsRes.settings);
       }
     } catch (e) {
       console.warn('Could not refresh admin data', e);
@@ -639,6 +681,23 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const updateAdminSettings = async (updates: Partial<AdminSettings>) => {
+    const optimistic = { ...adminSettings, ...updates };
+    setAdminSettings(optimistic);
+    setSettingsLoading(true);
+    try {
+      const res = await apiRequest<{ settings: AdminSettings }>('/admin/settings', {
+        method: 'PATCH',
+        body: JSON.stringify(updates)
+      });
+      if (res?.settings) setAdminSettings(res.settings);
+    } catch {
+      // keep optimistic update on error
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -681,7 +740,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         updateQuoteStatus,
         stats,
         analytics,
-        refreshData
+        refreshData,
+        adminSettings,
+        settingsLoading,
+        updateAdminSettings
       }}
     >
       {children}
