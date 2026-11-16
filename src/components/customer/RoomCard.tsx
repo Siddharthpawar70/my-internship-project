@@ -14,6 +14,7 @@ export function RoomCard({ room, hotel, onSelect, isSelected }: RoomCardProps) {
   const { adults, children: childrenCount, nightsCount, checkIn } = useSearch();
   const [selectedPlanId, setSelectedPlanId] = useState<string>(room.ratePlans[0]?.id || '');
   const [showPlans, setShowPlans] = useState(true);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const totalGuests = adults + childrenCount;
   const isOccupancyExceeded = adults > room.maxAdults || totalGuests > room.maxOccupancy;
@@ -23,6 +24,7 @@ export function RoomCard({ room, hotel, onSelect, isSelected }: RoomCardProps) {
   const isLowInventory = availableInventory <= 4;
 
   const currentPlan = room.ratePlans.find((p) => p.id === selectedPlanId) || room.ratePlans[0];
+  const activeImage = room.images?.[activeImageIndex] || room.images?.[0] || '';
 
   return (
     <div
@@ -35,17 +37,36 @@ export function RoomCard({ room, hotel, onSelect, isSelected }: RoomCardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12">
         
         {/* Room Image */}
-        <div className="lg:col-span-4 relative h-60 lg:h-auto overflow-hidden">
+        <div className="lg:col-span-4 relative h-60 lg:h-auto overflow-hidden group">
           <img
-            src={room.images[0]}
+            src={activeImage}
             alt={room.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute top-3 left-3">
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#1E252B]/85 text-white backdrop-blur-xs">
               {room.type}
             </span>
           </div>
+
+          {room.images && room.images.length > 1 && (
+            <div className="absolute bottom-3 right-3 flex items-center gap-1.5 z-10 bg-black/60 backdrop-blur-xs px-2 py-1 rounded-full">
+              {room.images.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveImageIndex(idx);
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                    activeImageIndex === idx ? 'bg-[#C5A880] scale-125' : 'bg-white/60 hover:bg-white'
+                  }`}
+                  aria-label={`Photo ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
 
           {isLowInventory && (
             <div className="absolute bottom-3 left-3 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-md flex items-center gap-1">

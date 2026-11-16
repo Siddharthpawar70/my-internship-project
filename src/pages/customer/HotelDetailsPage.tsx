@@ -53,12 +53,38 @@ export function HotelDetailsPage() {
 
   const galleryImages: GalleryImage[] = (hotel.galleryImages && hotel.galleryImages.length > 0)
     ? hotel.galleryImages
-    : (hotel.images && hotel.images.length > 0 ? hotel.images : [hotel.heroImage]).map((url, i) => ({
-        id: `img-${i}`,
-        url,
-        caption: `${hotel.name} - View ${i + 1}`,
-        category: i === 0 ? 'Exterior' : i === 1 ? 'Rooms' : i === 2 ? 'Dining' : 'Amenities'
-      }));
+    : (hotel.images && hotel.images.length > 0 ? hotel.images : [hotel.heroImage]).map((url, i) => {
+        let category: GalleryImage['category'] = 'Exterior';
+        let caption = `${hotel.name} - View ${i + 1}`;
+        if (url.includes('Suite') || url.includes('Room')) {
+          category = 'Rooms';
+          caption = `${hotel.name} - Luxury Suite & Bedroom`;
+        } else if (url.includes('Dining') || url.includes('Restaurant')) {
+          category = 'Dining';
+          caption = `${hotel.name} - Fine Dining Restaurant & Lounge`;
+        } else if (url.includes('Pool')) {
+          category = 'Amenities';
+          caption = `${hotel.name} - Resort Heated Infinity Pool`;
+        } else if (url.includes('Play Area')) {
+          category = 'Amenities';
+          caption = `${hotel.name} - Kids Adventure & Play Club`;
+        } else if (i === 0) {
+          category = 'Exterior';
+          caption = `${hotel.name} - Grand Exterior Architecture`;
+        } else if (i === 1) {
+          category = 'Rooms';
+        } else if (i === 2) {
+          category = 'Dining';
+        } else {
+          category = 'Amenities';
+        }
+        return {
+          id: `img-${i}`,
+          url,
+          caption,
+          category
+        };
+      });
 
   const handleSelectRoom = (room: RoomType, ratePlan: RatePlan) => {
     selectHotelAndRoom(hotel, room, ratePlan);
@@ -178,7 +204,7 @@ export function HotelDetailsPage() {
 
           {/* Right 2x2 Grid */}
           <div className="hidden md:grid col-span-2 grid-cols-2 gap-3 h-full">
-            {galleryImages.slice(0, 4).map((img, i) => (
+            {(galleryImages.length > 4 ? galleryImages.slice(1, 5) : galleryImages.slice(0, 4)).map((img) => (
               <div
                 key={img.id}
                 onClick={() => setGalleryOpen(true)}
@@ -313,6 +339,105 @@ export function HotelDetailsPage() {
                 ))}
               </div>
             </section>
+
+            {/* Visual Experiences Showcase */}
+            {hotel.id === 'stayaura-pune-grand' && (
+              <section className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EAE6DF] shadow-xs">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#C5A880]">Visual Preview</span>
+                    <h2 className="font-display text-xl font-bold text-gray-900 mt-0.5">
+                      Hotel Interiors & Signature Spaces
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setGalleryOpen(true)}
+                    className="text-xs font-bold text-[#977341] hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Full Gallery ({galleryImages.length} Photos)</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div
+                    onClick={() => setGalleryOpen(true)}
+                    className="group relative h-52 rounded-2xl overflow-hidden cursor-pointer shadow-xs border border-gray-100"
+                  >
+                    <img
+                      src="/upload/images/hotel/The Grand Aurum & Spa - Deluxe Suite.jpg"
+                      alt="Deluxe Suite Bedroom"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <span className="px-2 py-0.5 rounded-md bg-[#C5A880] text-[#11161B] text-[10px] font-bold uppercase tracking-wider">
+                        Guest Suites
+                      </span>
+                      <h4 className="font-display text-sm font-bold mt-1 text-white">Deluxe Executive Suite</h4>
+                      <p className="text-[11px] text-gray-300">King plush bed, ivory & gold linens, skyline garden views</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setGalleryOpen(true)}
+                    className="group relative h-52 rounded-2xl overflow-hidden cursor-pointer shadow-xs border border-gray-100"
+                  >
+                    <img
+                      src="/upload/images/hotel/The Grand Aurum & Spa - Fine Dining.jpg"
+                      alt="Fine Dining Restaurant"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <span className="px-2 py-0.5 rounded-md bg-[#C5A880] text-[#11161B] text-[10px] font-bold uppercase tracking-wider">
+                        Culinary
+                      </span>
+                      <h4 className="font-display text-sm font-bold mt-1 text-white">The Olive Orchard Restaurant</h4>
+                      <p className="text-[11px] text-gray-300">Crystal chandeliers, dark marble, gourmet breakfast & dinner</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setGalleryOpen(true)}
+                    className="group relative h-52 rounded-2xl overflow-hidden cursor-pointer shadow-xs border border-gray-100"
+                  >
+                    <img
+                      src="/upload/images/hotel/The Grand Aurum & Spa - Infinity Pool.jpg"
+                      alt="Resort Infinity Swimming Pool"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <span className="px-2 py-0.5 rounded-md bg-[#C5A880] text-[#11161B] text-[10px] font-bold uppercase tracking-wider">
+                        Wellness & Leisure
+                      </span>
+                      <h4 className="font-display text-sm font-bold mt-1 text-white">Outdoor Infinity Pool Terrace</h4>
+                      <p className="text-[11px] text-gray-300">Heated infinity water, private draped cabanas, sunset terrace</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setGalleryOpen(true)}
+                    className="group relative h-52 rounded-2xl overflow-hidden cursor-pointer shadow-xs border border-gray-100"
+                  >
+                    <img
+                      src="/upload/images/hotel/The Grand Aurum & Spa - Kids Play Area.jpg"
+                      alt="Kids Activity & Play Club"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <span className="px-2 py-0.5 rounded-md bg-[#C5A880] text-[#11161B] text-[10px] font-bold uppercase tracking-wider">
+                        Family Amenity
+                      </span>
+                      <h4 className="font-display text-sm font-bold mt-1 text-white">Little Aurum Explorers Club</h4>
+                      <p className="text-[11px] text-gray-300">Scandinavian wooden play structures, craft zones, supervised activities</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* Full Amenities Grid */}
             <section className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EAE6DF] shadow-xs">

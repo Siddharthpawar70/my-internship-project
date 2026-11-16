@@ -236,6 +236,158 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Signature Spaces & Amenities Showcase */}
+      <section className="bg-[#11161B] text-[#FAF9F6] py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
+            <div>
+              <span className="text-xs font-bold tracking-widest text-[#C5A880] uppercase">
+                Immersive Hospitality
+              </span>
+              <h2 className="font-display text-3xl font-bold text-white mt-1">
+                Curated Spaces & Luxury Amenities
+              </h2>
+              <p className="text-xs text-gray-400 mt-1">
+                Explore handcrafted guest suites, fine culinary venues, heated infinity pools, and family amenities.
+              </p>
+            </div>
+            <Link
+              to="/hotel/stayaura-pune-grand"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#C5A880] text-[#11161B] hover:opacity-95 text-xs font-bold transition-opacity mt-4 sm:mt-0 shadow-lg shadow-[#C5A880]/20"
+            >
+              <span>Explore The Grand Aurum</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 1. Suite */}
+            <Link
+              to="/hotel/stayaura-pune-grand"
+              className="group rounded-3xl bg-[#1E252B] border border-white/10 overflow-hidden shadow-xl hover:border-[#C5A880]/50 transition-all flex flex-col"
+            >
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src="/upload/images/hotel/The Grand Aurum & Spa - Deluxe Suite.jpg"
+                  alt="Deluxe Executive Suite"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-[#C5A880] border border-[#C5A880]/30">
+                  Guest Suites
+                </span>
+              </div>
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white group-hover:text-[#C5A880] transition-colors">
+                    Deluxe Executive Suite
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1.5 leading-relaxed">
+                    King plush bed with ivory and gold linens, Italian decor, and panoramic views.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                  <span className="text-gray-400">From ₹4,999/night</span>
+                  <span className="text-[#C5A880] font-bold group-hover:translate-x-0.5 transition-transform">View Suite →</span>
+                </div>
+              </div>
+            </Link>
+
+            {/* 2. Dining */}
+            <Link
+              to="/hotel/stayaura-pune-grand"
+              className="group rounded-3xl bg-[#1E252B] border border-white/10 overflow-hidden shadow-xl hover:border-[#C5A880]/50 transition-all flex flex-col"
+            >
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src="/upload/images/hotel/The Grand Aurum & Spa - Fine Dining.jpg"
+                  alt="Fine Dining Restaurant"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-[#C5A880] border border-[#C5A880]/30">
+                  Culinary
+                </span>
+              </div>
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white group-hover:text-[#C5A880] transition-colors">
+                    Fine Dining & Lounge
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1.5 leading-relaxed">
+                    Double-height chandeliers, dark marble accents, and Michelin-inspired menus.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Breakfast Included</span>
+                  <span className="text-[#C5A880] font-bold group-hover:translate-x-0.5 transition-transform">Explore Menu →</span>
+                </div>
+              </div>
+            </Link>
+
+            {/* 3. Pool */}
+            <Link
+              to="/hotel/stayaura-pune-grand"
+              className="group rounded-3xl bg-[#1E252B] border border-white/10 overflow-hidden shadow-xl hover:border-[#C5A880]/50 transition-all flex flex-col"
+            >
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src="/upload/images/hotel/The Grand Aurum & Spa - Infinity Pool.jpg"
+                  alt="Heated Infinity Pool"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-[#C5A880] border border-[#C5A880]/30">
+                  Wellness
+                </span>
+              </div>
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white group-hover:text-[#C5A880] transition-colors">
+                    Heated Infinity Pool
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1.5 leading-relaxed">
+                    Sunset ocean views, sunken pool loungers, and private draped cabanas.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Complimentary Access</span>
+                  <span className="text-[#C5A880] font-bold group-hover:translate-x-0.5 transition-transform">View Pool →</span>
+                </div>
+              </div>
+            </Link>
+
+            {/* 4. Play Area */}
+            <Link
+              to="/hotel/stayaura-pune-grand"
+              className="group rounded-3xl bg-[#1E252B] border border-white/10 overflow-hidden shadow-xl hover:border-[#C5A880]/50 transition-all flex flex-col"
+            >
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src="/upload/images/hotel/The Grand Aurum & Spa - Kids Play Area.jpg"
+                  alt="Kids Adventure Club"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-[#C5A880] border border-[#C5A880]/30">
+                  Family Club
+                </span>
+              </div>
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white group-hover:text-[#C5A880] transition-colors">
+                    Kids Activity Club
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1.5 leading-relaxed">
+                    Scandinavian wooden adventure play structures, arts & crafts, and family activities.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Family Privileges</span>
+                  <span className="text-[#C5A880] font-bold group-hover:translate-x-0.5 transition-transform">Discover Club →</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* StayAura Loyalty Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mb-12">
         <div className="relative rounded-3xl bg-gradient-to-r from-[#1E252B] via-[#2A343D] to-[#1E252B] p-8 sm:p-14 text-white overflow-hidden shadow-2xl">
