@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiRequest } from '../lib/api';
+import { recordUserRegistration, recordUserLogin } from '../lib/userStore';
 
 export interface UserProfile {
   id: string;
@@ -63,6 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: 'POST', body: JSON.stringify({ email, password })
       });
       setUser(result.user);
+      recordUserLogin(result.user.email);
       setIsAuthModalOpen(false);
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : String(err || '');
@@ -87,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: 'customer'
         };
         setUser(demoUser);
+        recordUserLogin(demoUser.email);
         try {
           sessionStorage.setItem('stayaura_user_demo', JSON.stringify(demoUser));
         } catch {}
@@ -104,6 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (result.user) {
         setUser(result.user);
+        recordUserRegistration(result.user);
         setIsAuthModalOpen(false);
         return { status: 'success', user: result.user };
       }
@@ -120,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         role: 'customer'
       };
       setUser(registeredUser);
+      recordUserRegistration(registeredUser);
       setIsAuthModalOpen(false);
       return { status: 'success', user: registeredUser };
     } catch (err) {
@@ -145,6 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: 'customer'
         };
         setUser(demoUser);
+        recordUserRegistration(demoUser);
         try {
           sessionStorage.setItem('stayaura_user_demo', JSON.stringify(demoUser));
         } catch {}

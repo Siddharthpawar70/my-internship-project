@@ -297,3 +297,15 @@ export interface AdminSettings {
   allowGuestReviews: boolean;
   adminNotificationEmail: string;
 }
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: 'approved' | 'pending' | 'rejected' | string;
+  role?: 'customer' | 'admin' | string;
+  registeredAt: string;
+  joinedDate?: string;
+  lastLogin?: string;
+}

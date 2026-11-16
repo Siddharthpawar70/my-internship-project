@@ -3,6 +3,7 @@ import { Hotel, RoomType, HousekeepingRoom, MaintenanceTicket, Coupon, GroupQuot
 import { INITIAL_HOTELS, INITIAL_ROOMS, INITIAL_HOUSEKEEPING, INITIAL_MAINTENANCE, COUPONS_LIST, INITIAL_GROUP_QUOTES, INITIAL_BOOKINGS } from '../data/mockData';
 import { apiRequest } from '../lib/api';
 import { UserProfile } from './AuthContext';
+import { getStoredUsers, saveStoredUsers } from '../lib/userStore';
 
 export interface AdminStats {
   todayRevenue: number;
@@ -203,9 +204,22 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [hotels, setHotels] = useState<Hotel[]>(INITIAL_HOTELS);
   const [rooms, setRooms] = useState<RoomType[]>(INITIAL_ROOMS);
   const [adminBookings, setAdminBookings] = useState<Booking[]>(INITIAL_BOOKINGS);
-  const [registeredUsers, setRegisteredUsers] = useState<AdminUser[]>([]);
+  const [registeredUsers, setRegisteredUsers] = useState<AdminUser[]>(getStoredUsers);
   const [usersLoading, setUsersLoading] = useState(false);
   const [adminReviews, setAdminReviews] = useState<Review[]>([]);
+
+  // Cross-tab & local storage synchronization for registered users
+  useEffect(() => {
+    const handleSync = () => {
+      setRegisteredUsers(getStoredUsers());
+    };
+    window.addEventListener('stayaura_users_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('stayaura_users_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, []);
 
   const [housekeeping, setHousekeeping] = useState<HousekeepingRoom[]>(INITIAL_HOUSEKEEPING);
   const [maintenanceTickets, setMaintenanceTickets] = useState<MaintenanceTicket[]>(INITIAL_MAINTENANCE);
@@ -287,15 +301,19 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setAdminBookings(bookingsRes.bookings);
       }
 
-      // 3. Fetch real users from DB
+      // 3. Fetch real users from DB (or sync with client registry)
       setUsersLoading(true);
       try {
         const usersRes = await apiRequest<{ users: AdminUser[] }>('/admin/users');
-        if (usersRes?.users) {
+        if (usersRes?.users && usersRes.users.length > 0) {
           setRegisteredUsers(usersRes.users);
+          saveStoredUsers(usersRes.users);
+        } else {
+          setRegisteredUsers(getStoredUsers());
         }
       } catch {
-        // Keep existing list on error; do not fall back to mock data
+        // When backend endpoint is unavailable (e.g. static hosting on Vercel), load stored users
+        setRegisteredUsers(getStoredUsers());
       } finally {
         setUsersLoading(false);
       }
@@ -406,7 +424,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     await apiRequest<void>('/admin/auth/logout', { method: 'DELETE' }).catch(() => {});
     setAdminUser(null);
     setAdminBookings(INITIAL_BOOKINGS);
-    setRegisteredUsers([]);
+    setRegisteredUsers(getStoredUsers());
     setAdminReviews([]);
     setCoupons(COUPONS_LIST);
     setStats(defaultStats);
@@ -491,7 +509,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateUserStatus = async (userId: string, status: string) => {
-    setRegisteredUsers((prev) => prev.map((u) => u.id === userId ? { ...u, status } : u));
+    setRegisteredUsers((prev) => {
+      const updated = prev.map((u) => u.id === userId ? { ...u, status } : u);
+      saveStoredUsers(updated);
+      return updated;
+    });
     await apiRequest<{ success: boolean }>(`/admin/users/${encodeURIComponent(userId)}`, {
       method: 'PATCH',
       body: JSON.stringify({ status })
@@ -499,7 +521,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateUserRole = async (userId: string, role: string) => {
-    setRegisteredUsers((prev) => prev.map((u) => u.id === userId ? { ...u, role } : u));
+    setRegisteredUsers((prev) => {
+      const updated = prev.map((u) => u.id === userId ? { ...u, role } : u);
+      saveStoredUsers(updated);
+      return updated;
+    });
     await apiRequest<{ success: boolean }>(`/admin/users/${encodeURIComponent(userId)}`, {
       method: 'PATCH',
       body: JSON.stringify({ role })
