@@ -182,7 +182,7 @@ async function findUser(request: Request): Promise<StoredUser | undefined> {
   );
   if (!users[0]) return undefined;
   const user = JSON.parse(users[0].data) as StoredUser;
-  if (user.status && user.status !== 'approved') return undefined;
+  if (user.status === 'rejected') return undefined;
   return user;
 }
 
@@ -959,7 +959,7 @@ app.post('/api/auth/register', asyncRoute(async (request, response, next) => {
       loyaltyTier: 'Silver',
       loyaltyPoints: 0,
       joinedDate: now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-      status: 'pending',
+      status: 'approved',
       role: 'customer',
       registeredAt: now.toISOString().replace('T', ' ').substring(0, 19)
     };
@@ -967,7 +967,8 @@ app.post('/api/auth/register', asyncRoute(async (request, response, next) => {
     await execute('INSERT INTO users (id, email, password_salt, password_hash, data) VALUES (?, ?, ?, ?, ?)', [
       id, email, salt, passwordDigest(password, salt), JSON.stringify(user)
     ]);
-    return response.status(201).json({ pending: true, message: 'Registration successful. Your account is awaiting admin approval.' });
+    await issueSession(id, response, false);
+    return response.status(201).json({ user, message: 'Registration successful! Welcome to StayAura.' });
   } catch (error) {
     if (isDuplicateKeyError(error)) return response.status(409).json({ error: 'An account with this email already exists.' });
     return next(error);
@@ -994,11 +995,13 @@ app.post('/api/auth/login', asyncRoute(async (request, response) => {
   if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) return response.status(401).json({ error: 'Email or password is incorrect.' });
 
   const userData = JSON.parse(record.data) as StoredUser;
+  // Auto-approve user upon login if account status was pending
   if (userData.status === 'pending') {
-    return response.status(403).json({ error: 'Your account is pending admin approval. Please wait for approval before logging in.' });
+    userData.status = 'approved';
+    await execute('UPDATE users SET data = ? WHERE id = ?', [JSON.stringify(userData), record.id]);
   }
   if (userData.status === 'rejected') {
-    return response.status(403).json({ error: 'Your account has been rejected. Please contact support.' });
+    return response.status(403).json({ error: 'Your account has been suspended or rejected. Please contact support.' });
   }
 
   clearRateLimit(rateKey);
