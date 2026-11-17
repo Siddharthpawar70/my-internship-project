@@ -367,17 +367,21 @@ export function BookingConfirmationPage() {
           {/* Voucher Header with StayAura Logo */}
           <div className="flex items-start justify-between pb-8 border-b border-gray-200">
             <div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#1E252B] flex items-center justify-center text-[#C5A880]">
-                  <Sparkles className="w-4 h-4" />
+              <div className="flex items-center gap-3">
+                <img
+                  src="/upload/images/Logo.png"
+                  alt="StayAura Logo"
+                  className="h-10 w-auto rounded-lg border border-[#C5A880]/30 shadow-xs object-contain"
+                />
+                <div>
+                  <span className="font-display text-xl font-bold tracking-tight text-gray-900">
+                    Stay<span className="text-[#C5A880]">Aura</span>
+                  </span>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">
+                    Official Hotel Reservation Voucher
+                  </p>
                 </div>
-                <span className="font-display text-xl font-bold tracking-tight text-gray-900">
-                  Stay<span className="text-[#C5A880]">Aura</span>
-                </span>
               </div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">
-                Official Hotel Reservation Voucher
-              </p>
             </div>
 
             <div className="text-right">
@@ -414,7 +418,7 @@ export function BookingConfirmationPage() {
                 {booking.hotelAddress}, {booking.hotelCity}
               </p>
               <p className="text-xs text-gray-600 mt-1">
-                Concierge Contact: {booking.hotelPhone || '+91 20 6688 9900'}
+                Concierge Contact: {booking.hotelPhone || '+91 12 3456 7891'}
               </p>
               <div className="mt-3 p-3 rounded-xl bg-gray-50 border border-gray-100 text-xs">
                 <p className="font-semibold text-gray-800">
@@ -567,7 +571,7 @@ export function BookingConfirmationPage() {
             <p className="font-bold text-gray-700">Important Check-In Instructions:</p>
             <p>• Please present a valid government-issued photo ID (Aadhaar Card, Passport, or Driving License) for all guests upon arrival.</p>
             <p>• Free cancellation is honored up to 48 hours prior to official check-in time.</p>
-            <p>• For early check-in or airport transport assistance, contact the hotel concierge directly at {booking.hotelPhone || '+91 20 6688 9900'}.</p>
+            <p>• For early check-in or airport transport assistance, contact the hotel concierge directly at {booking.hotelPhone || '+91 12 3456 7891'}.</p>
           </div>
 
         </div>

@@ -62,9 +62,11 @@ export function AdminLoginPage() {
       <header className="border-b border-white/10 px-6 py-5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#C5A880] group-hover:scale-105 transition-transform duration-300">
-              <Sparkles className="w-5 h-5" />
-            </div>
+            <img
+              src="/upload/images/Logo.png"
+              alt="StayAura Logo"
+              className="h-10 w-auto rounded-xl border border-[#C5A880]/30 shadow-md object-contain group-hover:scale-105 transition-transform duration-300"
+            />
             <div>
               <span className="font-display text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
                 Stay<span className="text-[#C5A880]">Aura</span>
@@ -91,8 +93,12 @@ export function AdminLoginPage() {
           
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#C5A880]/20 to-[#E9D8B4]/10 text-[#C5A880] mx-auto flex items-center justify-center mb-4 border border-[#C5A880]/30 shadow-inner">
-              <ShieldCheck className="w-7 h-7" />
+            <div className="flex justify-center mb-4">
+              <img
+                src="/upload/images/Logo.png"
+                alt="StayAura Logo"
+                className="h-16 w-auto rounded-2xl border border-[#C5A880]/30 shadow-xl object-contain"
+              />
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C5A880]">
               Authorized Personnel Only

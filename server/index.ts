@@ -667,7 +667,7 @@ async function createBooking(request: BookingRequest, user: StoredUser): Promise
     hotelAddress: hotel.address,
     hotelCity: hotel.city,
     hotelImage: hotel.heroImage,
-    hotelPhone: '+91 20 6688 9900',
+    hotelPhone: '+91 12 3456 7891',
     roomId: room.id,
     roomName: room.name,
     ratePlanId: ratePlan.id,

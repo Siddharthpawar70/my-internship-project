@@ -133,7 +133,13 @@ export function AuthModal() {
       <div className="relative my-auto w-full max-w-lg overflow-hidden rounded-3xl border border-white/20 bg-white shadow-2xl">
         <div className="relative bg-gradient-to-br from-[#17202A] via-[#253342] to-[#1E252B] px-6 pb-7 pt-8 text-white sm:px-9">
           <button onClick={closeAuthModal} className="absolute right-4 top-4 rounded-full p-2 text-gray-300 hover:bg-white/10 hover:text-white" aria-label="Close authentication"><X className="h-5 w-5" /></button>
-          <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#C5A880]/20 text-[#E9D8B4]"><Sparkles className="h-5 w-5" /></div>
+          <div className="mb-3">
+            <img
+              src="/upload/images/Logo.png"
+              alt="StayAura Logo"
+              className="h-12 w-auto object-contain rounded-xl border border-[#C5A880]/30 shadow-md"
+            />
+          </div>
           <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C5A880]">StayAura Members</p>
           <h2 className="mt-1 font-display text-2xl font-bold">
             {screen === 'register' ? 'Create your travel profile' : screen === 'forgot' ? 'Reset your password' : screen === 'verify' ? 'Verify your details' : screen === 'pending' ? 'Registration Submitted' : 'Welcome back'}

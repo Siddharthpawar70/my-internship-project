@@ -232,12 +232,14 @@ export function AdminDashboardPage() {
       <aside className="w-64 bg-[#1E252B] text-white shrink-0 hidden md:flex flex-col justify-between p-6">
         <div>
           {/* Brand */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-[#C5A880]">
-              <Sparkles className="w-5 h-5" />
-            </div>
+          <div className="flex items-center gap-3 mb-8">
+            <img
+              src="/upload/images/Logo.png"
+              alt="StayAura Logo"
+              className="h-11 w-auto rounded-xl border border-[#C5A880]/30 shadow-md object-contain"
+            />
             <div>
-              <span className="font-display text-lg font-bold">
+              <span className="font-display text-lg font-bold text-white">
                 Stay<span className="text-[#C5A880]">Aura</span>
               </span>
               <span className="block text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
@@ -321,18 +323,25 @@ export function AdminDashboardPage() {
         
         {/* Top Header Strip */}
         <div className="flex items-center justify-between pb-6 mb-6 border-b border-[#EAE6DF]">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[#C5A880]">
-                StayAura Central Console
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
-                Live Database Active
-              </span>
+          <div className="flex items-center gap-3">
+            <img
+              src="/upload/images/Logo.png"
+              alt="StayAura Logo"
+              className="md:hidden h-10 w-auto rounded-xl border border-[#C5A880]/30 shadow-xs object-contain"
+            />
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#C5A880]">
+                  StayAura Central Console
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
+                  Live Database Active
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Signed in as <strong className="text-gray-900">{adminUser?.email || 'admin@stayaura.com'}</strong>
+              </p>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Signed in as <strong className="text-gray-900">{adminUser?.email || 'admin@stayaura.com'}</strong>
-            </p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -1382,7 +1391,7 @@ export function AdminDashboardPage() {
                     value={settingsForm.supportEmail || ''}
                     onChange={(e) => handleSettingChange('supportEmail', e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
-                    placeholder="concierge@stayaura.com"
+                    placeholder="stayaura@.com"
                   />
                 </div>
 
@@ -1393,7 +1402,7 @@ export function AdminDashboardPage() {
                     value={settingsForm.supportPhone || ''}
                     onChange={(e) => handleSettingChange('supportPhone', e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#C5A880]"
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 12 3456 7891"
                   />
                 </div>
 

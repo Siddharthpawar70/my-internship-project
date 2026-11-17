@@ -49,9 +49,11 @@ export function Footer() {
           
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#2D3748] to-[#3B4758] flex items-center justify-center text-[#C5A880]">
-                <Sparkles className="w-5 h-5" />
-              </div>
+              <img
+                src="/upload/images/Logo.png"
+                alt="StayAura Logo"
+                className="h-11 w-auto object-contain rounded-xl shadow-md border border-[#C5A880]/30 group-hover:scale-105 transition-transform duration-300"
+              />
               <div>
                 <span className="font-display text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
                   Stay<span className="text-[#C5A880]">Aura</span>
@@ -67,15 +69,15 @@ export function Footer() {
             <div className="mt-5 space-y-2 text-xs text-gray-300">
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#C5A880]" />
-                <span>+91 20 6688 9900 (Toll-Free 24x7)</span>
+                <span>+91 12 3456 7891</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#C5A880]" />
-                <span>concierge@stayaura.com</span>
+                <span>stayaura@.com</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <MapPin className="w-4 h-4 text-[#C5A880]" />
-                <span>Koregaon Park & BKC, Mumbai / Pune, India</span>
+                <span>abcdef ghijk lmno Pune, India</span>
               </div>
             </div>
           </div>
@@ -123,7 +125,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
-          <p>© 2026 StayAura Hospitality Technologies Ltd. All rights reserved.</p>
+          <p>©  2026 StayAura Hospitality Ltd. All rights reserved.</p>
           <div className="flex items-center space-x-6 text-[11px]">
             <span className="text-gray-400">INR (₹) Indian Rupee</span>
             <span>•</span>

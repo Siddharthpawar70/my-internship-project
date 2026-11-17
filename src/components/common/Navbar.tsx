@@ -42,9 +42,11 @@ export function Navbar() {
           
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#1E252B] to-[#2D3748] flex items-center justify-center text-[#C5A880] shadow-md group-hover:scale-105 transition-transform duration-300">
-              <Sparkles className="w-6 h-6" />
-            </div>
+            <img
+              src="/upload/images/Logo.png"
+              alt="StayAura Logo"
+              className="h-11 sm:h-12 w-auto object-contain rounded-xl shadow-md border border-[#C5A880]/30 group-hover:scale-105 transition-transform duration-300"
+            />
             <div>
               <span className="font-display text-2xl font-bold tracking-tight text-[#1E252B] flex items-center gap-1.5">
                 Stay<span className="text-[#C5A880]">Aura</span>

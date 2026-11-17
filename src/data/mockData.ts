@@ -2009,7 +2009,7 @@ export const INITIAL_BOOKINGS: Booking[] = [
     hotelAddress: '88 North Main Road, Koregaon Park, Pune, Maharashtra 411001',
     hotelCity: 'Pune',
     hotelImage: '/upload/images/hotel/The Grand Aurum & Spa.png',
-    hotelPhone: '+91 20 6688 9900',
+    hotelPhone: '+91 12 3456 7891',
     roomId: 'room-pune-grand-deluxe',
     roomName: 'Deluxe Courtyard Room',
     ratePlanId: 'rp-pune-deluxe-bb',
